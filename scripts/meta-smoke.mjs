@@ -55,6 +55,15 @@ async function main() {
     const transportArg = value('transport');
     if (transportArg) process.env.META_TRANSPORT = transportArg;
 
+    // Replay is keyless by design: it must work on a machine with no provider
+    // credentials at all, which is the judge path.
+    if (flag('replay')) {
+        if (!existsSync(FIXTURE)) fail(`no fixture at ${FIXTURE} — run a live call once to record it`);
+        const cached = JSON.parse(await readFile(FIXTURE, 'utf8'));
+        printResult(cached, 'replay');
+        return;
+    }
+
     const keys = { openrouter: process.env.OPENROUTER_API_KEY, meta: process.env.MODEL_API_KEY };
     const cfg = resolveMetaTransport(keys);
 
@@ -67,13 +76,6 @@ async function main() {
 
     const transcript = value('text') ?? 'do kilo cheeni kharida, ek sau bees rupaye';
     const hints = ['Sugar', 'Rice', 'Atta', 'Toor Dal'];
-
-    if (flag('replay')) {
-        if (!existsSync(FIXTURE)) fail(`no fixture at ${FIXTURE} — run a live call once to record it`);
-        const cached = JSON.parse(await readFile(FIXTURE, 'utf8'));
-        printResult(cached, 'replay');
-        return;
-    }
 
     if (value('asr')) {
         if (cfg.transport !== 'direct') {
