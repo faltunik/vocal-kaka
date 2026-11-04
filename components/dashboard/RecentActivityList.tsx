@@ -7,7 +7,7 @@ import { useAuth } from '@/services/AuthContext';
 import { container } from '@/services/Container';
 import { usePrivacy } from '@/services/PrivacyContext';
 import { TransactionItem, useRecentActivity } from '@/services/RecentActivityContext';
-import { formatClockTime } from '@/utils/format';
+import { formatClockTime, formatCurrency } from '@/utils/format';
 import { Ionicons } from '@expo/vector-icons';
 import React, { ComponentProps, useCallback, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -54,6 +54,21 @@ function rowText(item: TransactionItem): string {
     const prefix = isOutgoing ? '-' : '+';
     const unit = item.unit ? ` ${item.unit}` : '';
     return `${prefix} ${item.quantity}${unit} ${item.item}`.replace(/\s+/g, ' ').trim();
+}
+
+/**
+ * Money moved by this row: green when the shop received it, red when it left.
+ * Staff see no totals at all — a purchase amount reveals wholesale cost.
+ */
+function rowMoney(item: TransactionItem, isStaffMode: boolean): { text: string; color: string } | null {
+    if (isStaffMode) return null;
+    const raw = Number(String(item.amount ?? '').replace(/[^\d.]/g, ''));
+    if (!Number.isFinite(raw) || raw <= 0) return null;
+    const incoming = item.intent === 'SALE' || item.intent === 'VENDOR_RETURN';
+    return {
+        text: `${incoming ? '+' : '-'}${formatCurrency(raw)}`,
+        color: incoming ? Colors.light.success : Colors.light.danger,
+    };
 }
 
 export function RecentActivityList({ limit }: RecentActivityListProps) {
@@ -120,6 +135,7 @@ export function RecentActivityList({ limit }: RecentActivityListProps) {
         <View>
             {visible.map((item, index) => {
                 const visual = rowVisual(item);
+                const money = rowMoney(item, isStaffMode);
                 return (
                     <TouchableOpacity
                         key={item.id}
@@ -133,7 +149,11 @@ export function RecentActivityList({ limit }: RecentActivityListProps) {
                             <Ionicons name={visual.icon} size={18} color={visual.color} />
                         </View>
                         <Text style={styles.rowText} numberOfLines={1}>{rowText(item)}</Text>
-                        <Text style={styles.rowTime}>{formatClockTime(item.timestamp)}</Text>
+                        {money ? (
+                            <Text style={[styles.rowAmount, { color: money.color }]}>{money.text}</Text>
+                        ) : (
+                            <Text style={styles.rowTime}>{formatClockTime(item.timestamp)}</Text>
+                        )}
                     </TouchableOpacity>
                 );
             })}
@@ -179,6 +199,10 @@ const styles = StyleSheet.create({
     rowTime: {
         ...Typography.caption,
         color: Colors.light.textSecondary,
+    },
+    rowAmount: {
+        ...Typography.captionStrong,
+        fontSize: 13,
     },
     empty: {
         paddingVertical: Spacing.xl,
