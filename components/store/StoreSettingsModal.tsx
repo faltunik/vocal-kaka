@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {
     ActivityIndicator,
     Alert,
-    FlatList,
     Linking,
     Modal,
     ScrollView,
@@ -216,7 +215,7 @@ export function StoreSettingsModal({ visible, onClose }: StoreSettingsModalProps
 
                     {/* Tab 1: Profile */}
                     {activeTab === 'PROFILE' && (
-                        <ScrollView contentContainerStyle={styles.tabContent} showsVerticalScrollIndicator={false}>
+                        <ScrollView style={styles.tabScroll} contentContainerStyle={styles.tabContent} showsVerticalScrollIndicator={false}>
                             <Text style={styles.label}>Store Name *</Text>
                             <TextInput
                                 style={styles.input}
@@ -332,12 +331,9 @@ export function StoreSettingsModal({ visible, onClose }: StoreSettingsModalProps
 
                             {/* Active Members List */}
                             <Text style={styles.membersHeader}>Active Team Members ({members.length})</Text>
-                            <FlatList
-                                data={members}
-                                keyExtractor={item => item.id}
-                                contentContainerStyle={styles.membersList}
-                                renderItem={({ item }) => (
-                                    <View style={styles.memberCard}>
+                            <View style={styles.membersList}>
+                                {members.map(item => (
+                                    <View key={item.id} style={styles.memberCard}>
                                         <View style={styles.memberAvatar}>
                                             <Text style={styles.memberAvatarText}>
                                                 {(item.display_name || 'S').charAt(0).toUpperCase()}
@@ -375,8 +371,8 @@ export function StoreSettingsModal({ visible, onClose }: StoreSettingsModalProps
                                             </TouchableOpacity>
                                         )}
                                     </View>
-                                )}
-                            />
+                                ))}
+                            </View>
                         </View>
                     )}
                 </View>
@@ -396,8 +392,14 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: Radius.lg,
         borderTopRightRadius: Radius.lg,
         padding: Spacing.xl,
-        maxHeight: '85%',
+        // A maxHeight alone let the sheet collapse to its header when the
+        // scroll child reported no height. A real height keeps the tab body
+        // visible and lets the inner ScrollView do the scrolling.
+        height: '85%',
         gap: Spacing.md,
+    },
+    tabScroll: {
+        flexShrink: 1,
     },
     header: {
         flexDirection: 'row',

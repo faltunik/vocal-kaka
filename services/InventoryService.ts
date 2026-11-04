@@ -209,7 +209,12 @@ export class InventoryService {
             const delta = Math.round((physicalCount - Number(latest.quantity ?? 0)) * 1000) / 1000;
             if (delta === 0) return true;
 
-            return await this.recordEvent(scope, 'ADJUSTED', { product: latest.name, delta });
+            const unit = latest.base_unit ?? latest.unit ?? undefined;
+            return await this.recordEvent(scope, 'ADJUSTED', {
+                product: latest.name,
+                delta,
+                ...(unit ? { unit } : {}),
+            });
         });
     }
 

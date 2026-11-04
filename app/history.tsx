@@ -17,7 +17,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import React, { useEffect, useState } from 'react';
-import { Alert, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const HISTORY_TABS: readonly { value: HistoryTab; label: string }[] = [
     { value: 'ALL', label: 'All' },
@@ -430,18 +430,24 @@ export default function HistoryScreen() {
                 renderItem={renderItem}
                 contentContainerStyle={styles.listContent}
                 ListHeaderComponent={
-                    <View style={styles.summaryWrap}>
-                        <ProfitPulseCard
-                            loading={stats.loading}
-                            profit={stats.profit}
-                            sales={stats.sales}
-                            transactionCount={stats.transactionCount}
-                        />
-                    </View>
+                    rangeMode === 'DAY' && isToday ? (
+                        <View style={styles.summaryWrap}>
+                            <ProfitPulseCard
+                                loading={stats.loading}
+                                profit={stats.profit}
+                                sales={stats.sales}
+                                transactionCount={stats.transactionCount}
+                            />
+                        </View>
+                    ) : null
                 }
                 ListEmptyComponent={
                     <Text style={styles.emptyText}>
-                        {loading ? 'Loading history…' : 'No transactions found for this day.'}
+                        {loading
+                            ? 'Loading history…'
+                            : rangeMode === 'WEEK'
+                                ? 'No transactions found for this week.'
+                                : 'No transactions found for this day.'}
                     </Text>
                 }
             />

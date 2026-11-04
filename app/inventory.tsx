@@ -2,7 +2,6 @@ import React, { useMemo, useState, useCallback } from 'react';
 import {
     FlatList,
     RefreshControl,
-    ScrollView,
     StyleSheet,
     Text,
     TextInput,
