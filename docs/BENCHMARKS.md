@@ -1,4 +1,4 @@
-﻿# Benchmarks and reproducibility
+# Benchmarks and reproducibility
 
 All measurements were taken on 4 November 2026, during the work on this repository
 (Windows 11, Node 24.17.0), unless a row says otherwise. Every row is labelled **measured**,
@@ -13,7 +13,7 @@ npm run typecheck && npm run lint && npm test
 | Check | Result |
 |---|---|
 | Jest suites | **65 passing / 65 total** |
-| Jest tests | **587 passing / 587 total** |
+| Jest tests | **589 passing / 589 total** |
 | TypeScript (`tsc --noEmit`) | **0 diagnostics** |
 | ESLint (`expo lint`) | **0 warnings** |
 
