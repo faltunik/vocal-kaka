@@ -96,6 +96,11 @@ command.
 The parse chain does not stop at the table: after `gpt-oss-120b` it falls through four legacy
 OpenRouter models. The full order is in `supabase/functions/_shared/providers.ts`.
 
+When Muse Spark is called through OpenRouter, OpenRouter routes `meta/muse-spark-1.1` to
+**Meta itself** (`"provider": "Meta"`, `is_byok: false`) — verified against the live endpoint on
+2026-11-04, not inferred from the slug. So the request is served by Meta either way; the
+transport only decides whose billing pool it lands in.
+
 **ASR caveat — read this with the table.** In a configured deployment, every command is parsed
 by Muse Spark first; the failover chain takes over only if that call fails. **Muse Voice
 Transcribe is wired and exercised by `npm run meta:smoke -- --asr <file.wav>` on RIFF/WAVE
