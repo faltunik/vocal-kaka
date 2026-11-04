@@ -46,6 +46,7 @@ export function EditProductModal({ visible, item, onClose, onSuccess, userId }: 
     const [secondaryUnit, setSecondaryUnit] = useState('');
     const [conversionFactor, setConversionFactor] = useState('');
     const [physicalStock, setPhysicalStock] = useState('');
+    const [showAdvanced, setShowAdvanced] = useState(false);
 
     useEffect(() => {
         if (item) {
@@ -59,6 +60,7 @@ export function EditProductModal({ visible, item, onClose, onSuccess, userId }: 
             setConversionFactor(item.conversion_factor != null ? String(item.conversion_factor) : '');
             setPhysicalStock(item.quantity != null ? String(item.quantity) : '');
             setSubmitting(false);
+            setShowAdvanced(false);
         }
     }, [item, visible]);
 
@@ -212,103 +214,119 @@ export function EditProductModal({ visible, item, onClose, onSuccess, userId }: 
                     testID="edit-product-name-input"
                 />
 
-                {/* Vernacular Aliases */}
-                <AppTextField
-                    label="Vernacular / Hindi Aliases (Comma-separated)"
-                    value={aliases}
-                    onChangeText={setAliases}
-                    placeholder="e.g. अरहर दाल, Arhar Dal"
-                    testID="edit-product-aliases-input"
-                />
-
-                {/* Category Chips */}
-                <Text style={styles.fieldLabel}>Category</Text>
-                <View style={styles.chipRow}>
-                    {CATEGORY_OPTIONS.map((cat) => {
-                        const active = cat.key === category;
-                        return (
-                            <TouchableOpacity
-                                key={cat.key}
-                                style={[styles.chip, active && styles.chipActive]}
-                                onPress={() => setCategory(cat.key)}
-                                accessibilityRole="button"
-                                accessibilityState={{ selected: active }}
-                                testID={`edit-category-chip-${cat.key}`}
-                            >
-                                <Text style={[styles.chipText, active && styles.chipTextActive]}>
-                                    {cat.label}
-                                </Text>
-                            </TouchableOpacity>
-                        );
-                    })}
-                </View>
-
-                {/* Rates & Base Unit */}
-                <Text style={styles.sectionHeader}>Rates & Measurement</Text>
+                {/* Primary rate — the only number a shopkeeper changes daily */}
+                <Text style={styles.sectionHeader}>Rate & Measurement</Text>
                 <Text style={styles.unitNote}>Base Measurement Unit: {baseUnit}</Text>
 
-                <View style={styles.row}>
-                    <AppTextField
-                        label={`Counter Selling Rate (₹ / ${baseUnit})`}
-                        value={sellingPrice}
-                        onChangeText={setSellingPrice}
-                        keyboardType="decimal-pad"
-                        placeholder="e.g. 48"
-                        containerStyle={styles.halfInput}
-                        testID="edit-product-selling-price-input"
-                    />
-                    <AppTextField
-                        label={`Wholesale Cost (₹ / ${baseUnit})`}
-                        value={costPrice}
-                        onChangeText={setCostPrice}
-                        keyboardType="decimal-pad"
-                        placeholder="e.g. 42"
-                        containerStyle={styles.halfInput}
-                        testID="edit-product-cost-price-input"
-                    />
-                </View>
-
-                {validMargin && (
-                    <View style={[styles.marginPreview, isNegativeMargin && styles.marginWarning]}>
-                        <Text style={[styles.marginText, isNegativeMargin && styles.marginWarningText]}>
-                            {isNegativeMargin
-                                ? `Warning: Negative Margin ₹${marginDelta.toFixed(2)} (${marginPercent}%)`
-                                : `Gross Margin: ₹${marginDelta.toFixed(2)} / ${baseUnit} (+${marginPercent}%)`}
-                        </Text>
-                    </View>
-                )}
-
                 <AppTextField
-                    label={`Low-Stock Alert Threshold (${baseUnit})`}
-                    value={threshold}
-                    onChangeText={setThreshold}
-                    keyboardType="numeric"
-                    placeholder="5"
-                    testID="edit-product-threshold-input"
+                    label={`Counter Selling Rate (₹ / ${baseUnit})`}
+                    value={sellingPrice}
+                    onChangeText={setSellingPrice}
+                    keyboardType="decimal-pad"
+                    placeholder="e.g. 48"
+                    testID="edit-product-selling-price-input"
                 />
 
-                {/* Wholesale Packaging */}
-                <Text style={styles.sectionHeader}>Wholesale Packaging (Optional)</Text>
-                <View style={styles.row}>
-                    <AppTextField
-                        label="Secondary Unit (e.g. bori, peti)"
-                        value={secondaryUnit}
-                        onChangeText={setSecondaryUnit}
-                        placeholder="bori"
-                        autoCapitalize="none"
-                        containerStyle={styles.halfInput}
-                        testID="edit-product-secondary-unit-input"
+                <TouchableOpacity
+                    style={styles.advancedToggle}
+                    onPress={() => setShowAdvanced(v => !v)}
+                    accessibilityRole="button"
+                    accessibilityState={{ expanded: showAdvanced }}
+                    testID="edit-product-advanced-toggle"
+                >
+                    <Text style={styles.advancedToggleText}>
+                        {showAdvanced ? 'Hide advanced options' : 'Advanced options'}
+                    </Text>
+                    <Ionicons
+                        name={showAdvanced ? 'chevron-up' : 'chevron-down'}
+                        size={16}
+                        color={Colors.light.tint}
                     />
-                    <AppTextField
-                        label={`Contains (${baseUnit}s)`}
-                        value={conversionFactor}
-                        onChangeText={setConversionFactor}
-                        keyboardType="decimal-pad"
-                        placeholder="50"
-                        containerStyle={styles.halfInput}
-                        testID="edit-product-conversion-factor-input"
-                    />
-                </View>
+                </TouchableOpacity>
+
+                {showAdvanced && (
+                    <View testID="edit-product-advanced-section">
+                        <AppTextField
+                            label="Vernacular / Hindi Aliases (Comma-separated)"
+                            value={aliases}
+                            onChangeText={setAliases}
+                            placeholder="e.g. अरहर दाल, Arhar Dal"
+                            testID="edit-product-aliases-input"
+                        />
+
+                        <Text style={styles.fieldLabel}>Category</Text>
+                        <View style={styles.chipRow}>
+                            {CATEGORY_OPTIONS.map((cat) => {
+                                const active = cat.key === category;
+                                return (
+                                    <TouchableOpacity
+                                        key={cat.key}
+                                        style={[styles.chip, active && styles.chipActive]}
+                                        onPress={() => setCategory(cat.key)}
+                                        accessibilityRole="button"
+                                        accessibilityState={{ selected: active }}
+                                        testID={`edit-category-chip-${cat.key}`}
+                                    >
+                                        <Text style={[styles.chipText, active && styles.chipTextActive]}>
+                                            {cat.label}
+                                        </Text>
+                                    </TouchableOpacity>
+                                );
+                            })}
+                        </View>
+
+                        <AppTextField
+                            label={`Wholesale Cost (₹ / ${baseUnit})`}
+                            value={costPrice}
+                            onChangeText={setCostPrice}
+                            keyboardType="decimal-pad"
+                            placeholder="e.g. 42"
+                            testID="edit-product-cost-price-input"
+                        />
+
+                        {validMargin && (
+                            <View style={[styles.marginPreview, isNegativeMargin && styles.marginWarning]}>
+                                <Text style={[styles.marginText, isNegativeMargin && styles.marginWarningText]}>
+                                    {isNegativeMargin
+                                        ? `Warning: Negative Margin ₹${marginDelta.toFixed(2)} (${marginPercent}%)`
+                                        : `Gross Margin: ₹${marginDelta.toFixed(2)} / ${baseUnit} (+${marginPercent}%)`}
+                                </Text>
+                            </View>
+                        )}
+
+                        <AppTextField
+                            label={`Low-Stock Alert Threshold (${baseUnit})`}
+                            value={threshold}
+                            onChangeText={setThreshold}
+                            keyboardType="numeric"
+                            placeholder="5"
+                            testID="edit-product-threshold-input"
+                        />
+
+                        {/* Wholesale Packaging */}
+                        <Text style={styles.sectionHeader}>Wholesale Packaging (Optional)</Text>
+                        <View style={styles.row}>
+                            <AppTextField
+                                label="Secondary Unit (e.g. bori, peti)"
+                                value={secondaryUnit}
+                                onChangeText={setSecondaryUnit}
+                                placeholder="bori"
+                                autoCapitalize="none"
+                                containerStyle={styles.halfInput}
+                                testID="edit-product-secondary-unit-input"
+                            />
+                            <AppTextField
+                                label={`Contains (${baseUnit}s)`}
+                                value={conversionFactor}
+                                onChangeText={setConversionFactor}
+                                keyboardType="decimal-pad"
+                                placeholder="50"
+                                containerStyle={styles.halfInput}
+                                testID="edit-product-conversion-factor-input"
+                            />
+                        </View>
+                    </View>
+                )}
 
                 {/* Physical Stock Audit & Adjustment */}
                 <Text style={styles.sectionHeader}>Physical Stock on Hand</Text>
@@ -386,8 +404,7 @@ const styles = StyleSheet.create({
     },
     fieldLabel: {
         ...Typography.captionStrong,
-        color: Colors.light.text,
-        marginBottom: Spacing.xs,
+        color: Colors.light.text,        marginBottom: Spacing.xs,
         marginTop: Spacing.xs,
     },
     chipRow: {
@@ -474,6 +491,22 @@ const styles = StyleSheet.create({
     },
     stockDeltaNegativeText: {
         color: Colors.light.warningText,
+    },
+    advancedToggle: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingVertical: Spacing.sm,
+        marginTop: Spacing.sm,
+        marginBottom: Spacing.xs,
+        borderTopWidth: StyleSheet.hairlineWidth,
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderColor: Colors.light.border,
+    },
+    advancedToggleText: {
+        ...Typography.captionStrong,
+        color: Colors.light.tint,
+        fontSize: 13,
     },
     buttonRow: {
         flexDirection: 'row',

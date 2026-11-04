@@ -29,7 +29,7 @@ export type CategoryFilterType = (typeof CATEGORIES)[number];
 export default function InventoryScreen() {
     const router = useRouter();
     const { items, loading, error, refetch } = useInventory();
-    const { isStaffMode } = usePrivacy();
+    const { isStaffMode, isMasked, toggleMask } = usePrivacy();
     const [query, setQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<CategoryFilterType>('All');
 
@@ -95,6 +95,21 @@ export default function InventoryScreen() {
                     </Text>
                 </View>
                 <View style={styles.headerActions}>
+                    {!isStaffMode && (
+                        <TouchableOpacity
+                            style={styles.actionButton}
+                            onPress={() => { void toggleMask(); }}
+                            accessibilityRole="button"
+                            accessibilityLabel={isMasked ? 'Show buying prices' : 'Hide buying prices'}
+                            testID="toggle-cost-visibility-header-button"
+                        >
+                            <Ionicons
+                                name={isMasked ? 'eye-off-outline' : 'eye-outline'}
+                                size={20}
+                                color={Colors.light.text}
+                            />
+                        </TouchableOpacity>
+                    )}
                     {!isStaffMode && (
                         <TouchableOpacity
                             style={styles.actionButton}

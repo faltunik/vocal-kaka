@@ -56,6 +56,8 @@ describe('EditProductModal', () => {
 
         expect(getByText('Edit: Toor Dal')).toBeTruthy();
         expect(getByTestId('edit-product-selling-price-input').props.value).toBe('150');
+
+        fireEvent.press(getByTestId('edit-product-advanced-toggle'));
         expect(getByTestId('edit-product-cost-price-input').props.value).toBe('125');
         expect(getByTestId('edit-product-threshold-input').props.value).toBe('10');
         expect(getByTestId('edit-product-secondary-unit-input').props.value).toBe('bori');
@@ -77,6 +79,7 @@ describe('EditProductModal', () => {
         );
 
         // Update selling price and cost price
+        fireEvent.press(getByTestId('edit-product-advanced-toggle'));
         fireEvent.changeText(getByTestId('edit-product-selling-price-input'), '160');
         fireEvent.changeText(getByTestId('edit-product-cost-price-input'), '130');
         fireEvent.changeText(getByTestId('edit-product-threshold-input'), '15');
@@ -111,6 +114,7 @@ describe('EditProductModal', () => {
         );
 
         // Sell for 100, cost 125
+        fireEvent.press(getByTestId('edit-product-advanced-toggle'));
         fireEvent.changeText(getByTestId('edit-product-selling-price-input'), '100');
 
         expect(getByText(/Warning: Negative Margin/)).toBeTruthy();
@@ -128,6 +132,7 @@ describe('EditProductModal', () => {
         );
 
         fireEvent.changeText(getByTestId('edit-product-name-input'), 'Premium Toor Dal');
+        fireEvent.press(getByTestId('edit-product-advanced-toggle'));
         fireEvent.changeText(getByTestId('edit-product-aliases-input'), 'अरहर दाल, Yellow Dal');
         fireEvent.press(getByTestId('edit-category-chip-STAPLES'));
 
