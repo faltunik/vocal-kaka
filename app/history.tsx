@@ -28,6 +28,20 @@ const HISTORY_TABS: readonly { value: HistoryTab; label: string }[] = [
     { value: 'ADJUSTMENT', label: 'Adjustments' },
 ];
 
+/**
+ * The aggregated feed keys rows by intent, so "All" can show Tomatoes twice:
+ * one Stock In row and one Sales row. Label the intent or they read as dupes.
+ */
+const INTENT_LABELS: Record<string, string> = {
+    SALE: 'Sales',
+    PURCHASE: 'Stock In',
+    WRITE_OFF: 'Wastage',
+    EXPENSE: 'Expenses',
+    ADJUSTMENT: 'Adjustments',
+    CUSTOMER_RETURN: 'Returns',
+    VENDOR_RETURN: 'Vendor returns',
+};
+
 /** PDF badge class per ledger intent (FEAT-06 audit report). */
 function pdfBadgeClass(intent: ActivityIntent): string {
     switch (intent) {
@@ -294,7 +308,10 @@ export default function HistoryScreen() {
                 <Text style={styles.itemName}>{item.name}</Text>
                 <Text style={styles.totalQty}>{formatFriendlyQuantity(item.totalQty, item.unit)} Total</Text>
             </View>
-            <Text style={styles.subtext}>{item.count} transactions</Text>
+            <Text style={styles.subtext}>
+                {activeTab === 'ALL' ? `${INTENT_LABELS[item.intent] ?? item.intent} · ` : ''}
+                {item.count} {item.count === 1 ? 'transaction' : 'transactions'}
+            </Text>
         </TouchableOpacity>
     );
 
