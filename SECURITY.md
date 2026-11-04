@@ -9,7 +9,8 @@ Email the maintainer privately. Do not open a public issue for a vulnerability.
 - **No provider key ever ships in the client bundle.** Keys live in Supabase Vault
   (`groq_api_key`, `openrouter_api_key`, `model_api_key`) and are read only by the
   service-role Edge Function through `get_app_secret(text)`, which is revoked from
-  `public`, `anon` and `authenticated`.
+  `public`, `anon` and `authenticated`. The Meta direct transport may also read a
+  `MODEL_API_KEY` Edge secret as a fallback.
 - **No `EXPO_PUBLIC_*` variable may contain a secret.** Only the Supabase URL and the
   RLS-scoped anon key are public by design.
 - **Recordings are private and short-lived.** Audio is uploaded to a user-scoped path,
@@ -26,5 +27,5 @@ merged tenants through a personal-scope query.
 
 `events` is append-only: a trigger rejects `UPDATE` and `DELETE`. Corrections are
 `VOID` events that reference the original `ledger_event_id`, followed by a replacement.
-Idempotency is enforced with a client-generated UUID and a
-`pg_advisory_xact_lock(user_id, ledger_event_id)`.
+Idempotency is enforced with a client-generated UUID and a transactional advisory lock
+(`pg_advisory_xact_lock(hashtextextended(...))`) over the event key.
