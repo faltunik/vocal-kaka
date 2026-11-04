@@ -127,12 +127,11 @@ export function resolveWholesalePackaging(item: Partial<ParchiItem>): WholesaleP
     const isCountBase = rawBase === 'pcs' || rawBase === 'pc' || rawBase === 'pkt' || rawBase === 'pkts'
         || rawBase === 'packet' || rawBase === 'packets' || rawBase === 'm';
 
-    // Weight staples (sugar, rice, atta, daal, flour, etc.). Name heuristics
-    // never override an explicit count/volume base (e.g. Milk Biscuits).
-    if (
-        isMassBase ||
-        (!isCountBase && !isVolumeBase && /(sugar|rice|daal|dal|chana|wheat|atta|maida|anaj|besan|cheeni|chini|suji|sooji|namak|salt)/i.test(nameLower))
-    ) {
+    // Weight staples (sugar, rice, atta, daal, flour, etc.). A mass base alone
+    // is not enough: vegetables and spices are sold loose by the kg and must
+    // not be turned into "4 bori (200 kg)" on a purchase order.
+    const isStapleName = /(sugar|rice|daal|dal|chana|wheat|atta|maida|anaj|besan|cheeni|chini|suji|sooji|namak|salt)/i.test(nameLower);
+    if (isStapleName && !isCountBase && !isVolumeBase) {
         const factor = (rawBase === 'g' || rawBase === 'gm' || rawBase === 'gram') ? 50000 : 50;
         const baseUnit = (rawBase === 'g' || rawBase === 'gm' || rawBase === 'gram') ? 'g' : 'kg';
         return {

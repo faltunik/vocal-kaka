@@ -91,7 +91,7 @@ function isRevenueEvent(event: AnalyticsEvent): boolean {
 }
 
 /** Positive revenue for a single event (returns are subtracted by callers). */
-function eventRevenue(event: AnalyticsEvent): number {
+function eventRevenue(event: AnalyticsEvent, prices?: Map<string, number>): number {
     const payload = event.payload ?? {};
     const direct = payload.amount_spent ?? payload.amount;
     if (direct != null) {
@@ -103,11 +103,26 @@ function eventRevenue(event: AnalyticsEvent): number {
     if (Number.isFinite(price) && price > 0 && Number.isFinite(quantity) && quantity > 0) {
         return price * quantity;
     }
+    // Same fallback the profit card uses: a voice sale without a spoken price
+    // is valued at the product's catalog price, never at zero.
+    const catalogPrice = prices?.get(productKey(payload.product)) ?? 0;
+    if (catalogPrice > 0 && Number.isFinite(quantity) && quantity > 0) {
+        return catalogPrice * quantity;
+    }
     return 0;
 }
 
-function signedRevenue(event: AnalyticsEvent): number {
-    const revenue = eventRevenue(event);
+function buildPriceMap(inventory: AnalyticsInventoryRow[]): Map<string, number> {
+    const prices = new Map<string, number>();
+    for (const row of inventory) {
+        const price = Number(row.selling_price);
+        if (Number.isFinite(price) && price > 0) prices.set(productKey(row.name), price);
+    }
+    return prices;
+}
+
+function signedRevenue(event: AnalyticsEvent, prices?: Map<string, number>): number {
+    const revenue = eventRevenue(event, prices);
     return event.type === 'CUSTOMER_RETURN' ? -revenue : revenue;
 }
 
@@ -126,6 +141,7 @@ export function aggregateTopSellers(
     limit = 5
 ): TopSeller[] {
     const displayName = new Map(inventory.map(row => [productKey(row.name), String(row.name ?? '')]));
+    const prices = buildPriceMap(inventory);
     const totals = new Map<string, TopSeller>();
 
     for (const event of events) {
@@ -139,7 +155,7 @@ export function aggregateTopSellers(
             revenue: 0,
         };
         entry.quantity += signedQuantity(event);
-        entry.revenue += signedRevenue(event);
+        entry.revenue += signedRevenue(event, prices);
         totals.set(key, entry);
     }
 
@@ -171,7 +187,8 @@ export function computeDeadStock(
 export function computeDailyTrend(
     events: AnalyticsEvent[],
     days = 7,
-    now: Date = new Date()
+    now: Date = new Date(),
+    prices?: Map<string, number>
 ): DailyTrendPoint[] {
     const buckets: DailyTrendPoint[] = [];
     const index = new Map<string, number>();
@@ -189,7 +206,7 @@ export function computeDailyTrend(
         if (!isRevenueEvent(event) || !event.created_at) continue;
         const bucket = index.get(istDayKey(new Date(event.created_at)));
         if (bucket === undefined) continue;
-        buckets[bucket].revenue += signedRevenue(event);
+        buckets[bucket].revenue += signedRevenue(event, prices);
     }
 
     return buckets;
@@ -203,10 +220,11 @@ export function computeCategoryMix(
         inventory.map(row => [productKey(row.name), String(row.category ?? 'GENERAL').toUpperCase()])
     );
     const totals = new Map<string, number>();
+    const prices = buildPriceMap(inventory);
 
     for (const event of events) {
         if (!isRevenueEvent(event)) continue;
-        const revenue = signedRevenue(event);
+        const revenue = signedRevenue(event, prices);
         const category = categoryByProduct.get(productKey(event.payload?.product)) ?? 'GENERAL';
         totals.set(category, (totals.get(category) ?? 0) + revenue);
     }
@@ -254,14 +272,15 @@ export function buildAnalytics(
     inventory: AnalyticsInventoryRow[]
 ): AnalyticsData {
     const sold = events.filter(event => event.type === 'SOLD');
+    const prices = buildPriceMap(inventory);
     return {
         topSellers: aggregateTopSellers(events, inventory),
         deadStock: computeDeadStock(inventory, events),
-        trend: computeDailyTrend(events),
+        trend: computeDailyTrend(events, 7, new Date(), prices),
         categoryMix: computeCategoryMix(events, inventory),
         peakHours: computePeakHours(events),
         totalRevenue: Math.round(
-            events.reduce((sum, event) => sum + (isRevenueEvent(event) ? signedRevenue(event) : 0), 0) * 100
+            events.reduce((sum, event) => sum + (isRevenueEvent(event) ? signedRevenue(event, prices) : 0), 0) * 100
         ) / 100,
         totalTransactions: sold.length,
     };

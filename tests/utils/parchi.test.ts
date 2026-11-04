@@ -235,6 +235,23 @@ describe('WhatsApp Reorder Parchi Engine', () => {
     });
 
     describe('4. Parchi Item Line Formatting', () => {
+        it('does not invent a bori pack for loose vegetables or spices', () => {
+            const coriander = formatParchiItemLine(1, {
+                name: 'Coriander',
+                reorderQuantity: 5,
+                base_unit: 'kg',
+            });
+            const tomato = formatParchiItemLine(2, {
+                name: 'Tomatoes',
+                reorderQuantity: 3,
+                base_unit: 'kg',
+            });
+
+            expect(coriander).toBe('1. Coriander - 5 kg');
+            expect(tomato).toBe('2. Tomatoes - 3 kg');
+            expect(coriander).not.toContain('bori');
+        });
+
         it('formats Sugar line as "1. Sugar - 2 bori (100 kg)"', () => {
             const line = formatParchiItemLine(1, {
                 name: 'Sugar',

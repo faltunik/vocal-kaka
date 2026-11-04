@@ -108,4 +108,16 @@ describe('useAnalytics aggregations', () => {
         expect(data.totalTransactions).toBe(0);
         expect(data.trend).toHaveLength(7);
     });
+
+    it('values an unpriced voice sale at the catalog price, not zero', () => {
+        // A voice sale without a spoken price stores quantity only. History and
+        // the profit card value it at the catalog price; analytics must agree.
+        const data = buildAnalytics(
+            [{ type: 'SOLD', payload: { product: 'Sugar', quantity: 3 }, created_at: now.toISOString() }],
+            inventory
+        );
+
+        expect(data.totalRevenue).toBe(132); // 3 kg x Rs 44
+        expect(data.topSellers[0]).toEqual({ name: 'Sugar', quantity: 3, revenue: 132 });
+    });
 });
