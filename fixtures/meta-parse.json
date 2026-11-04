@@ -1,0 +1,19 @@
+{
+  "transcript": "do kilo cheeni kharida, ek sau bees rupaye",
+  "provider": "meta:openrouter:muse-spark-1.3",
+  "meta_transport": "openrouter",
+  "latency_ms": 6023,
+  "actions": {
+    "actions": [
+      {
+        "amount": 120,
+        "intent": "ADD_STOCK",
+        "item": "Sugar",
+        "original_text": "do kilo cheeni kharida, ek sau bees rupaye",
+        "quantity": 2,
+        "unit": "kg"
+      }
+    ]
+  },
+  "recorded_at": "2026-11-04T03:47:52.416Z"
+}
