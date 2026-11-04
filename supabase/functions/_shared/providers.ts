@@ -15,6 +15,8 @@ export interface AsrResult {
     text: string;
     provider: string;
     latencyMs?: number;
+    /** Language the provider detected (or was forced to). Diagnostic only. */
+    language?: string;
 }
 
 export interface ParseResult {
@@ -94,12 +96,15 @@ export async function transcribeAudio(
     if (keys.groq) {
         try {
             const startedAt = Date.now();
-            const text = await withTimeout(async signal => {
+            const result = await withTimeout(async signal => {
                 const form = new FormData();
                 form.append('file', audio, filename);
                 form.append('model', GROQ_WHISPER_MODEL);
-                form.append('language', 'hi');
+                // No forced language: Hinglish is code-switched, and forcing
+                // 'hi' made Whisper translate to English (dropping verbs).
+                // Auto-detect reports the real language in verbose_json.
                 form.append('prompt', ASR_CONTEXT_PROMPT);
+                form.append('response_format', 'verbose_json');
                 const response = await fetch(GROQ_ASR_URL, {
                     method: 'POST',
                     headers: { Authorization: `Bearer ${keys.groq}` },
@@ -112,10 +117,18 @@ export async function transcribeAudio(
                 const data = await response.json();
                 const value = typeof data?.text === 'string' ? data.text.trim() : '';
                 if (!value) throw new Error('groq returned an empty transcript');
-                return value;
+                return {
+                    text: value,
+                    language: typeof data?.language === 'string' ? data.language : undefined,
+                };
             }, ASR_TIMEOUT_MS);
 
-            return { text, provider: 'groq', latencyMs: Date.now() - startedAt };
+            return {
+                text: result.text,
+                provider: 'groq',
+                latencyMs: Date.now() - startedAt,
+                language: result.language,
+            };
         } catch (error) {
             errors.push(`groq: ${errMessage(error)}`);
         }

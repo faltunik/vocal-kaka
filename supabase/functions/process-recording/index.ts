@@ -205,7 +205,14 @@ Deno.serve(async (req) => {
             await cleanupAudio();
             return json({ error: 'transcription failed' }, 502);
         }
-        await updateLog({ status: 'transcribed', command_text: asr.text, transcript_provider: asr.provider });
+        await updateLog({
+            status: 'transcribed',
+            command_text: asr.text,
+            transcript_provider: asr.provider,
+            // Provider-reported language. 'en' on a Hinglish command means the
+            // ASR translated instead of transcribing, which drops verbs.
+            language: asr.language ?? null,
+        });
 
         // 2. Parse with inventory hints from the active store catalog. The same
         // rows feed the value-sale price lookup so spoken prices resolve against
