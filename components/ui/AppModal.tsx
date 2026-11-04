@@ -111,10 +111,13 @@ const styles = StyleSheet.create({
     },
     center: {
         borderRadius: Radius.lg,
+        // A long form must scroll inside the sheet, never grow past the screen.
+        maxHeight: '90%',
     },
     sheet: {
         borderRadius: Radius.lg,
         paddingBottom: Spacing.xxxl,
+        maxHeight: '92%',
     },
     grabber: {
         width: 36,
@@ -144,5 +147,6 @@ const styles = StyleSheet.create({
     },
     scroll: {
         flexShrink: 1,
+        flexGrow: 0,
     },
 });
