@@ -86,4 +86,67 @@ describe('TransactionEditModal expense titles', () => {
             expect(onResolveRate).toHaveBeenCalledWith(unresolved, 40);
         });
     });
+
+    it('passes an edited total amount through as a numeric correction value', () => {
+        const sale: TransactionItem = {
+            id: 's1',
+            intent: 'SALE',
+            item: 'Tomatoes',
+            quantity: 2,
+            unit: 'kg',
+            timestamp: Date.now(),
+            amount: '₹80',
+            title: 'Sold 2 kg Tomatoes',
+            subtitle: 'Today',
+            persisted: true,
+        };
+
+        const { getByText, getByTestId } = render(
+            <TransactionEditModal
+                visible
+                transaction={sale}
+                onClose={jest.fn()}
+                onSave={onSave}
+                onDelete={jest.fn()}
+            />
+        );
+
+        fireEvent.changeText(getByTestId('transaction-amount-input'), '90');
+        fireEvent.press(getByText('Save Changes'));
+
+        expect(onSave).toHaveBeenCalledWith(
+            's1',
+            expect.objectContaining({ amountValue: 90, subtitle: 'Edited' })
+        );
+    });
+
+    it('rejects a negative total instead of writing it', () => {
+        const sale: TransactionItem = {
+            id: 's2',
+            intent: 'SALE',
+            item: 'Tomatoes',
+            quantity: 2,
+            unit: 'kg',
+            timestamp: Date.now(),
+            amount: '₹80',
+            title: 'Sold 2 kg Tomatoes',
+            subtitle: 'Today',
+            persisted: true,
+        };
+
+        const { getByText, getByTestId } = render(
+            <TransactionEditModal
+                visible
+                transaction={sale}
+                onClose={jest.fn()}
+                onSave={onSave}
+                onDelete={jest.fn()}
+            />
+        );
+
+        fireEvent.changeText(getByTestId('transaction-amount-input'), '-5');
+        fireEvent.press(getByText('Save Changes'));
+
+        expect(onSave).not.toHaveBeenCalled();
+    });
 });

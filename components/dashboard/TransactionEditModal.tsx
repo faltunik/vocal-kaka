@@ -8,7 +8,8 @@ import { FeedbackService } from '@/services/FeedbackService';
 import { usePrivacy } from '@/services/PrivacyContext';
 import { TransactionItem } from '@/services/RecentActivityContext';
 import { getErrorMessage } from '@/utils/errors';
-import { formatActivityTitle } from '@/utils/format';
+import { formatActivityTitle, formatCurrency } from '@/utils/format';
+import { parseNonNegativeNumber } from '@/utils/numeric';
 import { parsePositiveQuantity } from '@/utils/quantity';
 import React, { useEffect, useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
@@ -36,6 +37,7 @@ export function TransactionEditModal({
     const [quantity, setQuantity] = useState('');
     const [unit, setUnit] = useState('');
     const [rate, setRate] = useState('');
+    const [amountInput, setAmountInput] = useState('');
     const [resolving, setResolving] = useState(false);
     const { isStaffMode } = usePrivacy();
 
@@ -46,6 +48,11 @@ export function TransactionEditModal({
             setQuantity(String(transaction.quantity));
             setUnit(transaction.unit || '');
             setRate('');
+            setAmountInput(
+                transaction.amountValue != null
+                    ? String(transaction.amountValue)
+                    : String(Number(String(transaction.amount ?? '').replace(/[^\d.]/g, '')) || 0)
+            );
             setResolving(false);
         }
     }, [transaction]);
@@ -74,17 +81,28 @@ export function TransactionEditModal({
             return;
         }
 
+        const trimmedAmount = amountInput.trim();
+        const amountNum = trimmedAmount === '' ? null : parseNonNegativeNumber(trimmedAmount);
+        if (trimmedAmount !== '' && amountNum == null) {
+            Alert.alert('Invalid amount', 'Enter a total amount of 0 or more.');
+            return;
+        }
+        // A changed total is a real correction: it changes revenue/profit, so it
+        // must travel to the ledger as the replacement payload's price basis.
+        const amountText = amountNum != null ? formatCurrency(amountNum) : transaction.amount;
+
         const updates: Partial<TransactionItem> = {
             intent,
             item: trimmedItem,
             quantity: qtyNum,
             unit: trimmedUnit,
-            // Re-derive display fields, but keep the stored amount
+            // Re-derive display fields from the (possibly edited) totals
             title: intent === 'EXPENSE'
-                ? `Spent ${transaction.amount}${trimmedItem && trimmedItem !== 'Expense' ? ` on ${trimmedItem}` : ''}`
+                ? `Spent ${amountText}${trimmedItem && trimmedItem !== 'Expense' ? ` on ${trimmedItem}` : ''}`
                 : formatActivityTitle(intent, qtyNum, trimmedUnit, trimmedItem),
             subtitle: 'Edited',
-            amount: transaction.amount,
+            amount: amountText,
+            ...(amountNum != null ? { amountValue: amountNum } : {}),
             needsReview: false // Saving counts as review
         };
 
@@ -225,6 +243,15 @@ export function TransactionEditModal({
                         placeholder="e.g. kg"
                     />
                 </View>
+
+                <AppTextField
+                    label="Total Amount (₹)"
+                    value={amountInput}
+                    onChangeText={setAmountInput}
+                    keyboardType="decimal-pad"
+                    placeholder="e.g. 120"
+                    testID="transaction-amount-input"
+                />
             </View>
 
             <View style={styles.actions}>

@@ -1,4 +1,4 @@
-# Vocal Kaka
+﻿# Vocal Kaka
 
 **Speak Hinglish. Your kirana's stock, sales and profit update themselves.**
 
@@ -6,7 +6,7 @@ Vocal Kaka is a voice-first inventory app for Indian corner shops. The shopkeepe
 "do kilo cheeni aaya hai" or "aaj ka profit kya hai"; the app transcribes it, parses it into
 ledger actions, updates the shelf, and answers the question from the ledger.
 
-Built for the **Meta Global AI Developer Hackathon 2026** · Indie Developer track ·
+Built for the **Meta Global AI Developer Hackathon 2026** Â· Indie Developer track Â·
 Theme: **Build for Your World**.
 
 ---
@@ -18,11 +18,11 @@ Theme: **Build for Your World**.
 the baseline: the Expo Router app shell, auth, the Postgres event ledger and its migrations,
 multi-store membership and staff roles, inventory and catalog screens, barcode scanning, the
 Hinglish unit registry, and a server-side voice pipeline. Work that was in the working tree but
-never committed separately — quick counter, analytics, staff mode, invite-code expiry, database
-hardening, and the voice function's replay and audio cleanup paths — is part of the code here
+never committed separately â€” quick counter, analytics, staff mode, invite-code expiry, database
+hardening, and the voice function's replay and audio cleanup paths â€” is part of the code here
 too. It has no commit dates of its own, so it is not dated in this document.
 
-**What was built for this submission (26 October – 4 November 2026).**
+**What was built for this submission (26 October â€“ 4 November 2026).**
 
 - **Meta became the reasoning layer of the voice loop.** Every transcript is sent to
   **Muse Spark 1.1** first for structured-output parsing, with **Llama 3.3 70B**
@@ -31,7 +31,7 @@ too. It has no commit dates of its own, so it is not dated in this document.
   (`meta/muse-spark-1.1`, the path the recorded fixture used) or directly against
   `api.meta.ai` (`muse-spark-1.1`): one code path, one env var (`META_TRANSPORT`).
 - **Muse Voice Transcribe** (`muse-voice-transcribe-1.0`) on the direct transport, behind a
-  RIFF/WAVE guard, as the first ASR tier. The app's own recordings do not take this path —
+  RIFF/WAVE guard, as the first ASR tier. The app's own recordings do not take this path â€”
   see the caveat below.
 - **A verifiable Meta smoke test** (`npm run meta:smoke`) that prints the same provider label
   the Edge Function stores in `voice_command_logs`, plus a keyless replay mode.
@@ -50,7 +50,7 @@ commit 26 January 2026, last pre-hackathon commit 6 October 2026, and the hackat
 committed there on 4 November 2026. It remains private and is not a remote or parent of this
 one.
 
-**What a judge should assume.** The baseline is real, pre-existing product code — not
+**What a judge should assume.** The baseline is real, pre-existing product code â€” not
 scaffolding written for the demo. The hackathon delta is the Meta integration, the provider
 tests, the voice pipeline fixes and the packaging. The **keyless Meta replay is the reproducible
 path** (`npm run meta:smoke -- --replay`: no keys, no network). The app itself does not run
@@ -66,15 +66,15 @@ item, and time to fill forms. None of that is true at the counter.
 
 What *is* true:
 
-- The interface they already use is **speech**, in **Hinglish** — "do peti aashirvaad atta aaya",
+- The interface they already use is **speech**, in **Hinglish** â€” "do peti aashirvaad atta aaya",
   "aadha kilo dhaniya bech do", "paav kilo mirchi".
 - The units are physical, not abstract: **bori** (50 kg), **peti**, **paav** (0.25), **savaa**,
   **paune**, **dozen**, **crate**.
-- They do not want a credit ledger. Udhaar is explicitly **out of scope** — this app is about
+- They do not want a credit ledger. Udhaar is explicitly **out of scope** â€” this app is about
   stock truth, not debt.
 
-Vocal Kaka turns one spoken sentence into an append-only ledger event, a stock update, and — when
-asked — a plain-language answer. No forms. No barcode required. No English required to speak a
+Vocal Kaka turns one spoken sentence into an append-only ledger event, a stock update, and â€” when
+asked â€” a plain-language answer. No forms. No barcode required. No English required to speak a
 command.
 
 ### What you can see in 60 seconds
@@ -91,17 +91,17 @@ command.
 | Stage | First choice in code | Failover 1 | Failover 2 |
 |---|---|---|---|
 | **Intent parsing** | **Muse Spark 1.1** (`meta/muse-spark-1.1` on OpenRouter, or `muse-spark-1.1` directly on `api.meta.ai`) | **Llama 3.3 70B** (`meta-llama/llama-3.3-70b-instruct`, Meta open weights, via OpenRouter) | `openai/gpt-oss-120b` (Groq) |
-| **Speech → text** | **Muse Voice Transcribe** (`muse-voice-transcribe-1.0`, direct transport, RIFF/WAVE only — not reachable from the app's `.m4a` upload) | **Whisper large-v3** (Groq) — the path the app uses | Nemotron (OpenRouter) |
+| **Speech â†’ text** | **Muse Voice Transcribe** (`muse-voice-transcribe-1.0`, direct transport, RIFF/WAVE only â€” not reachable from the app's `.m4a` upload) | **Whisper large-v3** (Groq) â€” the path the app uses | Nemotron (OpenRouter) |
 
 The parse chain does not stop at the table: after `gpt-oss-120b` it falls through four legacy
 OpenRouter models. The full order is in `supabase/functions/_shared/providers.ts`.
 
 When Muse Spark is called through OpenRouter, OpenRouter routes `meta/muse-spark-1.1` to
-**Meta itself** (`"provider": "Meta"`, `is_byok: false`) — verified against the live endpoint on
+**Meta itself** (`"provider": "Meta"`, `is_byok: false`) â€” verified against the live endpoint on
 2026-11-04, not inferred from the slug. So the request is served by Meta either way; the
 transport only decides whose billing pool it lands in.
 
-**ASR caveat — read this with the table.** In a configured deployment, every command is parsed
+**ASR caveat â€” read this with the table.** In a configured deployment, every command is parsed
 by Muse Spark first; the failover chain takes over only if that call fails. **Muse Voice
 Transcribe is wired and exercised by `npm run meta:smoke -- --asr <file.wav>` on RIFF/WAVE
 input, but phone recordings are AAC (`.m4a`)**, and `transcribeAudio` only offers a filename to
@@ -114,7 +114,7 @@ Why this is not a wrapper:
   `ACTION_INTENTS` list the validator uses, so the model cannot invent an intent that the ledger
   cannot execute. If the envelope is malformed the call is rejected and the next provider answers.
 - **The model is inside the transaction path.** Its output is converted into append-only ledger
-  events with content-hash idempotency and an advisory-locked projection — not rendered as prose.
+  events with content-hash idempotency and an advisory-locked projection â€” not rendered as prose.
 - **Failover is explicit and observable.** `provider`, `provider_used` and `meta_transport` are
   returned on every response; `parse_provider` (which carries the transport and model, e.g.
   `meta:openrouter:muse-spark-1.1`) and `transcript_provider` are persisted to
@@ -142,32 +142,32 @@ exists, otherwise OpenRouter. `META_MODE=off` is a kill switch.
 ## Architecture
 
 ```text
-┌──────────────────────────── Expo app (React Native, SDK 54) ────────────────────────────┐
-│  VoiceOrb ── expo-av recorder ──► OfflineQueue (AsyncStorage, max 50)                    │
-│      │                                    │                                              │
-│      │ upload (user-scoped path)          │ retry on reconnect / foreground              │
-│      ▼                                    ▼                                              │
-│  Storage: recordings/<uid>/<recording_id>.m4a      functions.invoke('process-recording') │
-│                                                                                          │
-│  Screens: dashboard · inventory · history · analytics                                    │
-│           quick-counter · low-stock · scanner                                            │
-│  Data:    Container → InventoryService → SupabaseInventoryRepository (RLS-scoped)        │
-└───────────────────────────────────────────┬──────────────────────────────────────────────┘
-                                            │ anon key + user JWT
-┌───────────────────────────────────────────▼──────────────────────────────────────────────┐
-│ Supabase                                                                                 │
-│  Postgres                                                                                │
-│    events               append-only ledger (VOID instead of UPDATE/DELETE)               │
-│    handle_new_event()   trigger → inventory projection + idempotency                     │
-│    inventory, stores, store_members, unit_registry, voice_command_logs                   │
-│    RLS: is_store_member(store_id); staff profit masking; owner/admin invariants          │
-│  Storage: recordings/ (private, owner-only policies, deleted after parse)                │
-│  Vault:   groq_api_key, openrouter_api_key, model_api_key (never in the client bundle)   │
-│  Edge Functions (Deno)                                                                   │
-│    process-recording: auth → replay short-circuit → ASR → Muse Spark parse →             │
-│                       validate → insert events → trigger projects stock → answer text    │
-│    resolve-unit:      service-role only; learns unknown units into the global registry   │
-└──────────────────────────────────────────────────────────────────────────────────────────┘
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Expo app (React Native, SDK 54) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚  VoiceOrb â”€â”€ expo-av recorder â”€â”€â–º OfflineQueue (AsyncStorage, max 50)                    â”‚
+â”‚      â”‚                                    â”‚                                              â”‚
+â”‚      â”‚ upload (user-scoped path)          â”‚ retry on reconnect / foreground              â”‚
+â”‚      â–¼                                    â–¼                                              â”‚
+â”‚  Storage: recordings/<uid>/<recording_id>.m4a      functions.invoke('process-recording') â”‚
+â”‚                                                                                          â”‚
+â”‚  Screens: dashboard Â· inventory Â· history Â· analytics                                    â”‚
+â”‚           quick-counter Â· low-stock Â· scanner                                            â”‚
+â”‚  Data:    Container â†’ InventoryService â†’ SupabaseInventoryRepository (RLS-scoped)        â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                                            â”‚ anon key + user JWT
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚ Supabase                                                                                 â”‚
+â”‚  Postgres                                                                                â”‚
+â”‚    events               append-only ledger (VOID instead of UPDATE/DELETE)               â”‚
+â”‚    handle_new_event()   trigger â†’ inventory projection + idempotency                     â”‚
+â”‚    inventory, stores, store_members, unit_registry, voice_command_logs                   â”‚
+â”‚    RLS: is_store_member(store_id); staff profit masking; owner/admin invariants          â”‚
+â”‚  Storage: recordings/ (private, owner-only policies, deleted after parse)                â”‚
+â”‚  Vault:   groq_api_key, openrouter_api_key, model_api_key (never in the client bundle)   â”‚
+â”‚  Edge Functions (Deno)                                                                   â”‚
+â”‚    process-recording: auth â†’ replay short-circuit â†’ ASR â†’ Muse Spark parse â†’             â”‚
+â”‚                       validate â†’ insert events â†’ trigger projects stock â†’ answer text    â”‚
+â”‚    resolve-unit:      service-role only; learns unknown units into the global registry   â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
 ---
@@ -192,7 +192,7 @@ npx supabase db push      # applies supabase/migrations/*.sql
 ### 3. Edge Functions
 
 Provider keys live in **Supabase Vault** (the direct Meta transport may instead use the
-`MODEL_API_KEY` Edge secret) and are read only by the service-role Edge Function — never in the
+`MODEL_API_KEY` Edge secret) and are read only by the service-role Edge Function â€” never in the
 client bundle, never in `EXPO_PUBLIC_*`.
 
 ```bash
@@ -218,7 +218,7 @@ npm run meta:smoke -- --replay
 ```bash
 npm run typecheck   # tsc --noEmit
 npm run lint        # expo lint
-npm test            # 65 suites, 585 tests
+npm test            # 65 suites, 587 tests
 ```
 
 Measured on 4 November 2026; method and status for every row are in
@@ -226,13 +226,13 @@ Measured on 4 November 2026; method and status for every row are in
 
 | Metric | Result |
 |---|---|
-| Jest suites / tests | **65 / 585 passing** |
+| Jest suites / tests | **65 / 587 passing** |
 | TypeScript / ESLint | **0 diagnostics / 0 warnings** |
-| Unit normalization | **20/20 (100%)** on the resolver corpus — bori, peti, paav, crate, dozen, cross-dimension guards; reproduction method in [docs/BENCHMARKS.md](docs/BENCHMARKS.md) |
-| Intent parsing, section S1 | **14/15 (93.3%)** through the repo's eval harness, which calls `gpt-oss-120b` on Groq — **not** the Meta tier; the full 248-case run is TPM-limited and not claimed |
+| Unit normalization | **20/20 (100%)** on the resolver corpus â€” bori, peti, paav, crate, dozen, cross-dimension guards; reproduction method in [docs/BENCHMARKS.md](docs/BENCHMARKS.md) |
+| Intent parsing, section S1 | **14/15 (93.3%)** through the repo's eval harness, which calls `gpt-oss-120b` on Groq â€” **not** the Meta tier; the full 248-case run is TPM-limited and not claimed |
 | Muse Spark 1.1, 12-case S1 subset | **12/12 cases correct** (intent and item), ~1.1 s average with `reasoning_effort: minimal` (manual run) |
 | ASR latency, Whisper large-v3 | p50 **314 ms**, p95 **473 ms** on 7 usable provider round trips (pre-Meta build); 13 of 20 attempted calls hit HTTP 429, so this is a smoke signal, not a trustworthy p95 |
-| Replay idempotency | **0 duplicate content-hash ids** — 3 replays × 5 actions collapse to 5 ids (content-key layer, not a database row-count run) |
+| Replay idempotency | **0 duplicate content-hash ids** â€” 3 replays Ã— 5 actions collapse to 5 ids (content-key layer, not a database row-count run) |
 
 Not claimed: full-corpus intent accuracy, voice accuracy on real shop audio, end-to-end latency
 for the Spark path, database-level duplicate row counts, and cost per command.

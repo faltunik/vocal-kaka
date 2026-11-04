@@ -15,6 +15,8 @@ export interface TransactionItem {
     unit: string;
     timestamp: number;
     amount: string;
+    /** Raw numeric total, so an edit can correct the price without re-parsing ₹ text. */
+    amountValue?: number;
     title: string;
     subtitle: string;
     needsReview?: boolean;
@@ -56,6 +58,10 @@ function parseAmountString(value: string): number {
  * the display string, whose ₹-formatting rounds paise away.
  */
 function resolveRawAmount(item: TransactionItem): number {
+    // An explicit edit wins: the modal writes the new total here.
+    if (typeof item.amountValue === 'number' && Number.isFinite(item.amountValue) && item.amountValue >= 0) {
+        return item.amountValue;
+    }
     const fromPayload = Number(item.payload?.amount_spent ?? item.payload?.amount);
     if (Number.isFinite(fromPayload) && fromPayload > 0) {
         return fromPayload;
@@ -338,7 +344,7 @@ export const RecentActivityProvider = ({ children }: { children: React.ReactNode
                 // Correct against the event's own store, not the currently
                 // selected one (they can differ during/after a store switch).
                 const scope = toScope(user.id, existing.storeId ?? storeId);
-                const replacement = activityToEvent(resolved, resolveRawAmount(existing));
+                const replacement = activityToEvent(resolved, resolveRawAmount(resolved));
                 const applied = await container.inventoryService.applyCorrection(
                     scope,
                     existing.eventId!,
