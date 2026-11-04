@@ -1,0 +1,239 @@
+{
+  "generatedAt": "2026-10-03T04:14:53.287Z",
+  "voices": {
+    "hindi": "hi-IN-MadhurNeural",
+    "english": "en-IN-PrabhatNeural"
+  },
+  "fixtures": [
+    {
+      "id": "S1-001",
+      "audio": "hinglish/S1-001.mp3",
+      "spoken": "5 kilo cheeni aaya hai",
+      "expectedActions": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Sugar",
+          "quantity": 5,
+          "unit": "kg"
+        }
+      ]
+    },
+    {
+      "id": "S2-003",
+      "audio": "hinglish/S2-003.mp3",
+      "spoken": "aadha kilo dhaniya aaya",
+      "expectedActions": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Coriander",
+          "quantity": 0.5,
+          "unit": "kg"
+        }
+      ]
+    },
+    {
+      "id": "S3-001",
+      "audio": "hinglish/S3-001.mp3",
+      "spoken": "2 kilo cheeni bech diya",
+      "expectedActions": [
+        {
+          "intent": "SALE",
+          "item": "Sugar",
+          "quantity": 2,
+          "unit": "kg"
+        }
+      ]
+    },
+    {
+      "id": "S4-002",
+      "audio": "hinglish/S4-002.mp3",
+      "spoken": "paav kilo mirchi bechi",
+      "expectedActions": [
+        {
+          "intent": "SALE",
+          "item": "Green Chilli",
+          "quantity": 0.25,
+          "unit": "kg"
+        }
+      ]
+    },
+    {
+      "id": "S5-001",
+      "audio": "hinglish/S5-001.mp3",
+      "spoken": "2 kilo chini aur 1 packet namak bech diya",
+      "expectedActions": [
+        {
+          "intent": "SALE",
+          "item": "Sugar",
+          "quantity": 2,
+          "unit": "kg"
+        },
+        {
+          "intent": "SALE",
+          "item": "Salt",
+          "quantity": 1,
+          "unit": "packet"
+        }
+      ]
+    },
+    {
+      "id": "S7-001",
+      "audio": "hinglish/S7-001.mp3",
+      "spoken": "cheeni kitni hai?",
+      "expectedActions": [
+        {
+          "intent": "CHECK_STOCK",
+          "item": "Sugar"
+        }
+      ]
+    },
+    {
+      "id": "S8-001",
+      "audio": "hinglish/S8-001.mp3",
+      "spoken": "aaj ka profit kya hai?",
+      "expectedActions": [
+        {
+          "intent": "CHECK_PROFIT"
+        }
+      ]
+    },
+    {
+      "id": "S10-001",
+      "audio": "hinglish/S10-001.mp3",
+      "spoken": "bech do",
+      "expectedActions": [
+        {
+          "intent": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "id": "S12-001",
+      "audio": "hinglish/S12-001.mp3",
+      "spoken": "Hello, mic check 1 2 3",
+      "expectedActions": [
+        {
+          "intent": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "id": "S18-001",
+      "audio": "hinglish/S18-001.mp3",
+      "spoken": "aaj subah 20 packet doodh aaya",
+      "expectedActions": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Milk",
+          "quantity": 20,
+          "unit": "packet"
+        }
+      ]
+    },
+    {
+      "id": "S19-001",
+      "audio": "hinglish/S19-001.mp3",
+      "spoken": "Paanch rupaye waali Maggi 10 packet aaya",
+      "inventoryHints": [
+        "Maggi Rs 5",
+        "Maggi Rs 14"
+      ],
+      "expectedActions": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Maggi Rs 5",
+          "quantity": 10,
+          "unit": "packet"
+        }
+      ]
+    },
+    {
+      "id": "S20-001",
+      "audio": "hinglish/S20-001.mp3",
+      "spoken": "50 rupaye ka tel becha",
+      "expectedActions": [
+        {
+          "intent": "SALE",
+          "item": "Oil",
+          "amount": 50
+        }
+      ]
+    },
+    {
+      "id": "S21-001",
+      "audio": "hinglish/S21-001.mp3",
+      "spoken": "3 packet bread arre nahi, 4 packet bread bech do",
+      "expectedActions": [
+        {
+          "intent": "SALE",
+          "item": "Bread",
+          "quantity": 4,
+          "unit": "packet"
+        }
+      ]
+    },
+    {
+      "id": "S24-001",
+      "audio": "hinglish/S24-001.mp3",
+      "spoken": "Sharma ji ko 2 kilo aashirvaad aata udhar me diya",
+      "expectedActions": [
+        {
+          "intent": "SALE",
+          "item": "Aashirvaad Atta",
+          "quantity": 2,
+          "unit": "kg"
+        }
+      ]
+    },
+    {
+      "id": "S26-001",
+      "audio": "hinglish/S26-001.mp3",
+      "spoken": "Suno note karo: do bread, ek butter, chaar ande, aadha kilo paneer, aur ek packet dahi customer le gaya",
+      "expectedActions": [
+        {
+          "intent": "SALE",
+          "item": "Bread",
+          "quantity": 2,
+          "unit": "packet"
+        },
+        {
+          "intent": "SALE",
+          "item": "Butter",
+          "quantity": 1,
+          "unit": "packet"
+        },
+        {
+          "intent": "SALE",
+          "item": "Egg",
+          "quantity": 4,
+          "unit": "piece"
+        },
+        {
+          "intent": "SALE",
+          "item": "Paneer",
+          "quantity": 0.5,
+          "unit": "kg"
+        },
+        {
+          "intent": "SALE",
+          "item": "Curd",
+          "quantity": 1,
+          "unit": "packet"
+        }
+      ]
+    },
+    {
+      "id": "S30-002",
+      "audio": "hinglish/S30-002.mp3",
+      "spoken": "Do doodh do",
+      "expectedActions": [
+        {
+          "intent": "SALE",
+          "item": "Milk",
+          "quantity": 2,
+          "unit": "packet"
+        }
+      ]
+    }
+  ]
+}

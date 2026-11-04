@@ -1,0 +1,399 @@
+{
+  "generatedAt": "2026-11-04T03:45:54.486Z",
+  "mode": "intent",
+  "sections": [
+    "S1"
+  ],
+  "summary": {
+    "passed": 14,
+    "failed": 1,
+    "total": 15,
+    "blocked": 34
+  },
+  "bySection": {
+    "S1": {
+      "passed": 14,
+      "total": 15
+    }
+  },
+  "results": [
+    {
+      "id": "S1-001",
+      "section": "S1",
+      "passed": true,
+      "utterance": "5 kilo cheeni aaya hai",
+      "expected": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Sugar",
+          "quantity": 5,
+          "unit": "kg"
+        }
+      ],
+      "parsed": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Sugar",
+          "quantity": 5,
+          "unit": "kg",
+          "amount": null,
+          "original_text": "5 kilo cheeni aaya hai"
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "S1-002",
+      "section": "S1",
+      "passed": true,
+      "utterance": "2 peti Amul Taaza aayi",
+      "expected": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Amul Taaza",
+          "quantity": 2,
+          "unit": "crate"
+        }
+      ],
+      "parsed": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Amul Taaza",
+          "quantity": 2,
+          "unit": "crate",
+          "amount": null,
+          "original_text": "2 peti Amul Taaza aayi"
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "S1-003",
+      "section": "S1",
+      "passed": true,
+      "utterance": "10 packet Maggi aaya",
+      "expected": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Maggi",
+          "quantity": 10,
+          "unit": "packet"
+        }
+      ],
+      "parsed": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Maggi",
+          "quantity": 10,
+          "unit": "packet",
+          "amount": null,
+          "original_text": "10 packet Maggi aaya"
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "S1-004",
+      "section": "S1",
+      "passed": true,
+      "utterance": "500 ml Dettol aaya",
+      "expected": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Dettol",
+          "quantity": 500,
+          "unit": "ml"
+        }
+      ],
+      "parsed": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Dettol",
+          "quantity": 500,
+          "unit": "ml",
+          "amount": null,
+          "original_text": "500 ml Dettol aaya"
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "S1-005",
+      "section": "S1",
+      "passed": true,
+      "utterance": "5 crate Coca Cola stock mein daalo",
+      "expected": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Coca Cola",
+          "quantity": 5,
+          "unit": "crate"
+        }
+      ],
+      "parsed": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Coca Cola",
+          "quantity": 5,
+          "unit": "crate",
+          "amount": null,
+          "original_text": "5 crate Coca Cola stock mein daalo"
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "S1-006",
+      "section": "S1",
+      "passed": true,
+      "utterance": "naya maal aaya, 12 piece soap",
+      "expected": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Soap",
+          "quantity": 12,
+          "unit": "piece"
+        }
+      ],
+      "parsed": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "soap",
+          "quantity": 12,
+          "unit": "piece",
+          "amount": null,
+          "original_text": "naya maal aaya, 12 piece soap"
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "S1-007",
+      "section": "S1",
+      "passed": true,
+      "utterance": "tempo se 10 bori aashirvaad atta utra hai",
+      "expected": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Aashirvaad Atta",
+          "quantity": 10,
+          "unit": "bori"
+        }
+      ],
+      "parsed": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Aashirvaad Atta",
+          "quantity": 10,
+          "unit": "bori",
+          "amount": null,
+          "original_text": "tempo se 10 bori aashirvaad atta utra hai"
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "S1-008",
+      "section": "S1",
+      "passed": false,
+      "utterance": "Fortune refined oil ke 4 carton chadhado system me",
+      "expected": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Fortune Refined Oil",
+          "quantity": 4,
+          "unit": "carton"
+        }
+      ],
+      "parsed": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Fortune Oil",
+          "quantity": 4,
+          "unit": "carton",
+          "amount": null,
+          "original_text": "Fortune refined oil ke 4 carton chadhado system me"
+        }
+      ],
+      "failures": [
+        "missing {\"intent\":\"ADD_STOCK\",\"item\":\"Fortune Refined Oil\",\"quantity\":4,\"unit\":\"carton\"}",
+        "unexpected [{\"intent\":\"ADD_STOCK\",\"item\":\"Fortune Oil\",\"quantity\":4,\"unit\":\"carton\",\"amount\":null,\"original_text\":\"Fortune refined oil ke 4 carton chadhado system me\"}]"
+      ]
+    },
+    {
+      "id": "S1-009",
+      "section": "S1",
+      "passed": true,
+      "utterance": "subah distributor 20 packet bread de gaya",
+      "expected": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Bread",
+          "quantity": 20,
+          "unit": "packet"
+        }
+      ],
+      "parsed": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Bread",
+          "quantity": 20,
+          "unit": "packet",
+          "amount": null,
+          "original_text": "subah distributor 20 packet bread de gaya"
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "S1-010",
+      "section": "S1",
+      "passed": true,
+      "utterance": "Dettol handwash 6 piece receive hua abhi",
+      "expected": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Dettol Handwash",
+          "quantity": 6,
+          "unit": "piece"
+        }
+      ],
+      "parsed": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Dettol Handwash",
+          "quantity": 6,
+          "unit": "piece",
+          "amount": null,
+          "original_text": "Dettol handwash 6 piece"
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "S1-011",
+      "section": "S1",
+      "passed": true,
+      "utterance": "Colgate total 24 piece dukan me lagao",
+      "expected": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Colgate Total",
+          "quantity": 24,
+          "unit": "piece"
+        }
+      ],
+      "parsed": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Colgate Total",
+          "quantity": 24,
+          "unit": "piece",
+          "amount": null,
+          "original_text": "Colgate total 24 piece dukan me lagao"
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "S1-012",
+      "section": "S1",
+      "passed": true,
+      "utterance": "godown me 50 kilo maida dump kiya hai",
+      "expected": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Maida",
+          "quantity": 50,
+          "unit": "kg"
+        }
+      ],
+      "parsed": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Maida",
+          "quantity": 50,
+          "unit": "kg",
+          "amount": null,
+          "original_text": "godown me 50 kilo maida dump kiya hai"
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "S1-013",
+      "section": "S1",
+      "passed": true,
+      "utterance": "stock me 15 pouch milk replenish karo",
+      "expected": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Milk",
+          "quantity": 15,
+          "unit": "pouch"
+        }
+      ],
+      "parsed": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Milk",
+          "quantity": 15,
+          "unit": "pouch",
+          "amount": null,
+          "original_text": "stock me 15 pouch milk replenish karo"
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "S1-014",
+      "section": "S1",
+      "passed": true,
+      "utterance": "aaj ka delivery me 8 tray anda mila",
+      "expected": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Egg",
+          "quantity": 8,
+          "unit": "tray"
+        }
+      ],
+      "parsed": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Egg",
+          "quantity": 8,
+          "unit": "tray",
+          "amount": null,
+          "original_text": "8 tray anda"
+        }
+      ],
+      "failures": []
+    },
+    {
+      "id": "S1-015",
+      "section": "S1",
+      "passed": true,
+      "utterance": "Surf Excel 1 kilo waala 12 packet ghusao inventory me",
+      "expected": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Surf Excel 1kg",
+          "quantity": 12,
+          "unit": "packet"
+        }
+      ],
+      "parsed": [
+        {
+          "intent": "ADD_STOCK",
+          "item": "Surf Excel 1kg",
+          "quantity": 12,
+          "unit": "packet",
+          "amount": null,
+          "original_text": "Surf Excel 1 kilo waala 12 packet"
+        }
+      ],
+      "failures": []
+    }
+  ]
+}
