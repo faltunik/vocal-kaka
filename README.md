@@ -143,31 +143,31 @@ exists, otherwise OpenRouter. `META_MODE=off` is a kill switch.
 
 ```text
 +--------------------------------------------------------------------------------------+
-|  Expo app (React Native, SDK 54)                                                     |
+| Expo app (React Native, SDK 54)                                                      |
 |                                                                                      |
-|  VoiceOrb --(expo-av recorder)--> OfflineQueue (AsyncStorage, max 50)                  |
-|      |                                    |                                          |
-|      | upload (user-scoped path)          | retry on reconnect / foreground           |
-|      v                                    v                                          |
-|  Storage: recordings/<uid>/<id>.m4a  -->  functions.invoke('process-recording')       |
+| VoiceOrb --(expo-av recorder)--> OfflineQueue (AsyncStorage, max 50)                 |
+|     |                                   |                                            |
+|     | upload (user-scoped)              | retry on reconnect / foreground            |
+|     v                                   v                                            |
+| Storage: recordings/<uid>/<id>.m4a --> functions.invoke('process-recording')         |
 |                                                                                      |
-|  Screens: dashboard - inventory - history - analytics - quick counter - low stock     |
-|  Data:    Container -> InventoryService -> SupabaseInventoryRepository (RLS-scoped)   |
-+------------------------------------------+-------------------------------------------+
-                                           | anon key + user JWT
-+------------------------------------------v-------------------------------------------+
-|  Supabase                                                                            |
-|    Postgres                                                                          |
-|      events              append-only ledger (VOID, never UPDATE/DELETE)              |
-|      handle_new_event()  trigger -> inventory projection + idempotency               |
-|      inventory, stores, store_members, unit_registry, voice_command_logs             |
-|      RLS: is_store_member(store_id); staff profit masking; owner/admin invariants     |
-|    Storage: recordings/ (private, owner-only, deleted after parse)                    |
-|    Vault:   groq_api_key, openrouter_api_key, model_api_key (server-side only)        |
-|    Edge Functions (Deno)                                                             |
-|      process-recording: auth -> replay short-circuit -> ASR -> Muse Spark parse ->    |
-|                         validate -> insert events -> trigger projects stock -> answer |
-|      resolve-unit:      service-role only; learns unknown units into the registry     |
+| Screens: dashboard - inventory - history - analytics - quick counter - scanner       |
+| Data:    Container -> InventoryService -> SupabaseInventoryRepository (RLS)          |
++----------------------------------------v---------------------------------------------+
+                                         | anon key + user JWT
++----------------------------------------v---------------------------------------------+
+| Supabase                                                                             |
+|   Postgres                                                                           |
+|     events              append-only ledger (VOID, never UPDATE/DELETE)               |
+|     handle_new_event()  trigger -> inventory projection + idempotency                |
+|     inventory, stores, store_members, unit_registry, voice_command_logs              |
+|     RLS: is_store_member(store_id); staff masking; owner/admin invariants            |
+|   Storage: recordings/ (private, owner-only, deleted after parse)                    |
+|   Vault:   provider keys (server-side only, never in the client bundle)              |
+|   Edge Functions (Deno)                                                              |
+|     process-recording: auth -> replay -> ASR -> Muse Spark parse -> validate ->      |
+|                        insert events -> trigger projects stock -> answer text        |
+|     resolve-unit:      service-role only; learns unknown units                       |
 +--------------------------------------------------------------------------------------+
 ```
 
