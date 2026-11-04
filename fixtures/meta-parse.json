@@ -2,7 +2,7 @@
   "transcript": "do kilo cheeni kharida, ek sau bees rupaye",
   "provider": "meta:openrouter:muse-spark-1.1",
   "meta_transport": "openrouter",
-  "latency_ms": 2899,
+  "latency_ms": 2747,
   "actions": {
     "actions": [
       {
@@ -15,5 +15,5 @@
       }
     ]
   },
-  "recorded_at": "2026-11-04T04:10:45.084Z"
+  "recorded_at": "2026-11-04T04:17:47.324Z"
 }

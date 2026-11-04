@@ -93,7 +93,7 @@ describe('meta provider', () => {
 
             expect(body.model).toBe(META_INTENT_MODEL_OPENROUTER);
             expect(body.temperature).toBeUndefined();
-            expect(body.reasoning_effort).toBe('low');
+            expect(body.reasoning_effort).toBe('minimal');
             expect((body.response_format as { type: string }).type).toBe('json_schema');
             const messages = body.messages as Array<{ role: string; content: string }>;
             expect(messages[0].role).toBe('developer');

@@ -49,13 +49,23 @@ Run: `npm run test:intent` (live provider calls; requires `OPENROUTER_API_KEY`).
 | Stage | p50 | p95 | n |
 |---|---|---|---|
 | ASR (Whisper large-v3) | **314 ms** | **473 ms** | 7 |
-| Intent (Muse Spark 1.1, `reasoning_effort: low`) | **2.3 s** | **2.9 s** | 14 |
+| Intent (Muse Spark 1.1, `reasoning_effort: minimal`) | **1.1 s** | **1.6 s** | 12 |
 | End-to-end voice command | **7.4 s** | **10.6 s** | 7 |
 
 Muse Spark spends most of its time on the ~2.9k-token system prompt and reasoning tokens.
-On the S1 eval both Spark models scored 12/12 intent and 12/12 item; 1.1 averaged **2.3 s**
-against **6.5 s** for 1.3, so 1.1 is the default (`META_MODEL` overrides it). `prompt_cache_key`
-groups requests so the prefix can cache.
+On the S1 eval both Spark models scored 12/12 intent and 12/12 item; latency was dominated by
+`reasoning_effort`, not model size:
+
+| Config | Accuracy | Avg |
+|---|---|---|
+| Spark 1.3, `low` | 12/12 | 6.5 s |
+| Spark 1.1, `low` | 12/12 | 2.3 s |
+| **Spark 1.1, `minimal`** | **12/12** | **1.1 s** |
+| Spark 1.2, `minimal` | 12/12 | 1.6 s |
+
+`minimal` is the default. For reference, gpt-oss-120b on Groq answers the same prompt in
+1.0-1.2 s, so the Meta tier costs roughly nothing in latency. `prompt_cache_key` groups requests
+so the prefix can cache.
 
 ## 5. Idempotency proof
 

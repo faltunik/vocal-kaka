@@ -291,7 +291,9 @@ export function buildMetaRequestBody(
             { role: 'developer', content: SYSTEM_INSTRUCTION },
             { role: 'user', content: buildUserPrompt(transcript, hints) },
         ],
-        reasoning_effort: 'low',
+        // Muse Spark always reasons; "none" is a 400. "minimal" measured 12/12
+        // on the S1 eval at ~1.1s versus ~2.3s for "low".
+        reasoning_effort: 'minimal',
         max_completion_tokens: LLM_MAX_COMPLETION_TOKENS,
         prompt_cache_key: 'vocalstock-intent-v2.4',
         response_format: {

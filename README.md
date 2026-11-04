@@ -200,7 +200,7 @@ Measured on this tree:
 | Unit normalization corpus | **20/20 (100%)** — bori, peti, paav, crate, dozen, cross-dimension guards |
 | Intent parsing, section S1 | **14/15 (93.3%)** — full 248-case run is TPM-limited; not claimed as corpus-wide |
 | ASR latency (7 samples) | p50 **314 ms**, p95 **473 ms** |
-| Parse latency (Muse Spark 1.1, low reasoning) | **2.3 s** avg on the S1 eval, **2.9 s** in the live smoke test |
+| Parse latency (Muse Spark 1.1, `reasoning_effort: minimal`) | **1.1 s** avg on the S1 eval (12 cases); 1.1–2.7 s live, network-dependent |
 | Duplicate ledger events on replay | **0** — 3 replays × 5 actions collapse to 5 unique content-hash ids |
 
 The benchmark methodology, runner spec and the idempotency proof are in `docs/BENCHMARKS.md`.
