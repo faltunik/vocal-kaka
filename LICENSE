@@ -1,0 +1,43 @@
+Vocal Kaka Source-Available License, version 1.0
+Copyright (c) 2026 Nikhil Sannat. All rights reserved.
+
+This software and its accompanying source code, documentation and assets (the
+"Software") are made available on a source-available basis. They are NOT open
+source and NO rights are granted except as expressly stated below.
+
+1. EVALUATION LICENSE
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of the Software, to view, clone, compile, and execute the Software solely for
+   non-commercial evaluation, testing, research and educational purposes,
+   including evaluation as part of a hackathon, competition, or judging process,
+   subject to the following conditions:
+
+   a. The above copyright notice and this permission notice shall be included in
+      all copies or substantial portions of the Software.
+   b. The Software may not be used, in whole or in part, for any commercial
+      purpose, including internal business operations of a for-profit entity,
+      without prior written permission from the copyright holder.
+   c. Redistribution of the Software, or of any modified or derivative version,
+      requires prior written permission from the copyright holder. Sharing an
+      unmodified copy for evaluation under this license is permitted.
+   d. No trademark or service-mark rights are granted. The names "Vocal Kaka"
+      and "VocalStock" and associated logos may not be used to endorse or
+      promote derived products without prior written permission.
+
+2. NO WARRANTY
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+   IN THE SOFTWARE.
+
+3. THIRD-PARTY COMPONENTS
+
+   This Software depends on third-party packages that remain under their own
+   licenses (see package.json). Nothing in this license alters those terms.
+
+For permissions beyond the scope of this license, contact the copyright holder.
