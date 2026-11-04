@@ -327,12 +327,12 @@ Deno.serve(async (req) => {
         const answers = await buildAnswers(admin, { userId: user.id, storeId, role: callerRole }, queries);
 
         // A refused parse used to return silently, which reads as a broken app.
-        // Tell the shopkeeper what to say instead of doing nothing.
+        // Ask for the missing direction instead of dropping the transaction.
         if (applied === 0 && answers.length === 0 && actions.length > 0
             && actions.every(action => action.intent === 'UNKNOWN')) {
             answers.push({
                 intent: 'UNKNOWN',
-                text: 'Samajh nahi aaya. Jaise boliye: "do kilo cheeni kharida" ya "do kilo cheeni becha".',
+                text: 'Kharida ya becha? Boliye: "do kilo tamatar kharida" ya "do kilo tamatar becha".',
             });
         }
 
