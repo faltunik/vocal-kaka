@@ -49,14 +49,14 @@ const LLM_TIMEOUT_MS = 45_000;
 const MODELS_WITHOUT_JSON_MODE = new Set<string>(['inclusionai/ling-3.1-flash']);
 
 // Biases ASR toward kirana Hinglish so short commands transcribe consistently.
-// Action verbs are included on purpose: a dropped verb turns a valid command
-// into UNKNOWN, because the parser refuses to guess a direction.
+// Written in Devanagari on purpose: a Latin-script prompt biases Whisper toward
+// English output, and translation is what drops the action verb.
 const ASR_CONTEXT_PROMPT =
-    'Kirana inventory command in Hinglish. Keep every word, especially the action verb. ' +
-    'Verbs: kharida, kharid liya, aaya, aayi, aaye, becha, bech do, bech diya, khatam, waste, return. ' +
-    'Numbers: ek, do, teen, chaar, paanch, das, bees. ' +
-    'Units: kilo, gram, litre, packet, bora, bori, peti, crate, bottle, dozen, paav. ' +
-    'Items: cheeni, chawal, atta, tel, namak, dahi, doodh, jeera, mirchi, tamatar, pyaz, aloo.';
+    'किराना दुकान का हिंदी आदेश। शब्द वैसे ही लिखें जैसे बोले गए, क्रिया को न छोड़ें। ' +
+    'क्रियाएँ: खरीदा, खरीद लिया, आया, आई, बेचा, बेच दो, बेच दिया, खत्म, waste, return। ' +
+    'संख्या: एक, दो, तीन, चार, पाँच, दस, बीस। ' +
+    'इकाई: किलो, ग्राम, लीटर, पैकेट, बोरी, पेटी, क्रेट, बोतल, दर्जन, पाव। ' +
+    'सामान: चीनी, चावल, आटा, तेल, नमक, दही, दूध, जीरा, मिर्च, टमाटर, प्याज, धनिया, आलू।';
 
 function errMessage(error: unknown): string {
     return error instanceof Error ? error.message : String(error);
