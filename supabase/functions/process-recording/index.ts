@@ -326,6 +326,16 @@ Deno.serve(async (req) => {
         //    never receive profit metrics (Constitution Principle 8).
         const answers = await buildAnswers(admin, { userId: user.id, storeId, role: callerRole }, queries);
 
+        // A refused parse used to return silently, which reads as a broken app.
+        // Tell the shopkeeper what to say instead of doing nothing.
+        if (applied === 0 && answers.length === 0 && actions.length > 0
+            && actions.every(action => action.intent === 'UNKNOWN')) {
+            answers.push({
+                intent: 'UNKNOWN',
+                text: 'Samajh nahi aaya. Jaise boliye: "do kilo cheeni kharida" ya "do kilo cheeni becha".',
+            });
+        }
+
         // "applied" means work actually landed; a pure no-op stays "parsed".
         await updateLog({
             status: applied > 0 || answers.length > 0 ? 'applied' : 'parsed',

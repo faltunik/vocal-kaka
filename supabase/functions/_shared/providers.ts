@@ -46,11 +46,15 @@ const LLM_TIMEOUT_MS = 45_000;
 
 const MODELS_WITHOUT_JSON_MODE = new Set<string>(['inclusionai/ling-3.1-flash']);
 
-// Biases ASR toward kirana Hinglish so short commands transcribe consistently
+// Biases ASR toward kirana Hinglish so short commands transcribe consistently.
+// Action verbs are included on purpose: a dropped verb turns a valid command
+// into UNKNOWN, because the parser refuses to guess a direction.
 const ASR_CONTEXT_PROMPT =
-    'Kirana inventory command in Hinglish. Numbers: ek, do, teen, chaar, paanch, das, bees. ' +
+    'Kirana inventory command in Hinglish. Keep every word, especially the action verb. ' +
+    'Verbs: kharida, kharid liya, aaya, aayi, aaye, becha, bech do, bech diya, khatam, waste, return. ' +
+    'Numbers: ek, do, teen, chaar, paanch, das, bees. ' +
     'Units: kilo, gram, litre, packet, bora, bori, peti, crate, bottle, dozen, paav. ' +
-    'Items: cheeni, chawal, atta, tel, namak, dahi, doodh, jeera, mirchi.';
+    'Items: cheeni, chawal, atta, tel, namak, dahi, doodh, jeera, mirchi, tamatar, pyaz, aloo.';
 
 function errMessage(error: unknown): string {
     return error instanceof Error ? error.message : String(error);
