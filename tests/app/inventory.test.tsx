@@ -172,12 +172,12 @@ describe('InventoryScreen', () => {
         const { getByTestId, getByText, queryByText } = render(<InventoryScreen />);
 
         // Initially modal is not visible (or doesn't show title)
-        expect(queryByText('Add Product / Commodity')).toBeNull();
+        expect(queryByText('Add Product')).toBeNull();
 
         fireEvent.press(getByTestId('add-product-header-button'));
 
         await waitFor(() => {
-            expect(getByText('Add Product / Commodity')).toBeTruthy();
+            expect(getByText('Add Product')).toBeTruthy();
         });
     });
 

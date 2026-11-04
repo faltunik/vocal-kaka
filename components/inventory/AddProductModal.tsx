@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { AppModal } from '@/components/ui/AppModal';
@@ -42,6 +43,7 @@ export function AddProductModal({ visible, onClose, onSuccess, userId }: AddProd
     const [lowStockThreshold, setLowStockThreshold] = useState('10');
     const [submitting, setSubmitting] = useState(false);
     const [nameError, setNameError] = useState<string | null>(null);
+    const [showAdvanced, setShowAdvanced] = useState(false);
 
     // Reset fields when opening modal
     useEffect(() => {
@@ -58,6 +60,7 @@ export function AddProductModal({ visible, onClose, onSuccess, userId }: AddProd
             setLowStockThreshold('10');
             setNameError(null);
             setSubmitting(false);
+            setShowAdvanced(false);
         }
     }, [visible]);
 
@@ -145,7 +148,7 @@ export function AddProductModal({ visible, onClose, onSuccess, userId }: AddProd
         <AppModal
             visible={visible}
             onClose={onClose}
-            title="Add Product / Commodity"
+            title="Add Product"
             variant="sheet"
         >
             <View style={styles.container}>
@@ -164,35 +167,6 @@ export function AddProductModal({ visible, onClose, onSuccess, userId }: AddProd
                         {nameError}
                     </Text>
                 )}
-
-                <AppTextField
-                    label="Hindi / Vernacular Alias (Comma-separated)"
-                    value={alias}
-                    onChangeText={setAlias}
-                    placeholder="कच्ची खांड, Desi Cheeni, Brown Sugar"
-                    testID="add-product-alias-input"
-                />
-
-                <Text style={styles.fieldLabel}>Category *</Text>
-                <View style={styles.chipRow}>
-                    {CREATABLE_CATEGORY_OPTIONS.map((cat) => {
-                        const active = cat.key === category;
-                        return (
-                            <TouchableOpacity
-                                key={cat.key}
-                                style={[styles.chip, active && styles.chipActive]}
-                                onPress={() => handleCategoryChange(cat.key)}
-                                accessibilityRole="button"
-                                accessibilityState={{ selected: active }}
-                                testID={`category-chip-${cat.key}`}
-                            >
-                                <Text style={[styles.chipText, active && styles.chipTextActive]}>
-                                    {cat.label}
-                                </Text>
-                            </TouchableOpacity>
-                        );
-                    })}
-                </View>
 
                 <Text style={styles.fieldLabel}>Base Unit *</Text>
                 <View style={styles.unitRow}>
@@ -215,70 +189,116 @@ export function AddProductModal({ visible, onClose, onSuccess, userId }: AddProd
                     })}
                 </View>
 
-                <Text style={styles.sectionTitle}>Wholesale Packaging (Optional)</Text>
-                <View style={styles.twoCol}>
-                    <AppTextField
-                        label="Secondary Unit"
-                        value={secondaryUnit}
-                        onChangeText={setSecondaryUnit}
-                        placeholder="e.g. bori, pipa, peti"
-                        autoCapitalize="none"
-                        containerStyle={styles.halfCol}
-                        testID="add-product-secondary-unit-input"
-                    />
-                    <AppTextField
-                        label={`Factor (1 unit = ? ${baseUnit})`}
-                        value={conversionFactor}
-                        onChangeText={setConversionFactor}
-                        keyboardType="decimal-pad"
-                        placeholder="50"
-                        containerStyle={styles.halfCol}
-                        testID="add-product-conversion-factor-input"
-                    />
-                </View>
+                <AppTextField
+                    label={`Selling Price (₹ / ${baseUnit})`}
+                    value={sellingPrice}
+                    onChangeText={setSellingPrice}
+                    keyboardType="decimal-pad"
+                    placeholder="48"
+                    testID="add-product-selling-price-input"
+                />
 
-                <Text style={styles.sectionTitle}>Pricing & Initial Stock</Text>
-                <View style={styles.twoCol}>
-                    <AppTextField
-                        label={`Cost Price (₹ / ${baseUnit})`}
-                        value={costPrice}
-                        onChangeText={setCostPrice}
-                        keyboardType="decimal-pad"
-                        placeholder="42"
-                        containerStyle={styles.halfCol}
-                        testID="add-product-cost-price-input"
-                    />
-                    <AppTextField
-                        label={`Selling Price (₹ / ${baseUnit})`}
-                        value={sellingPrice}
-                        onChangeText={setSellingPrice}
-                        keyboardType="decimal-pad"
-                        placeholder="48"
-                        containerStyle={styles.halfCol}
-                        testID="add-product-selling-price-input"
-                    />
-                </View>
+                <AppTextField
+                    label={`Initial Stock (${baseUnit})`}
+                    value={initialStock}
+                    onChangeText={setInitialStock}
+                    keyboardType="decimal-pad"
+                    placeholder="100"
+                    testID="add-product-initial-stock-input"
+                />
 
-                <View style={styles.twoCol}>
-                    <AppTextField
-                        label={`Min Alert (${baseUnit})`}
-                        value={lowStockThreshold}
-                        onChangeText={setLowStockThreshold}
-                        keyboardType="numeric"
-                        placeholder="10"
-                        containerStyle={styles.halfCol}
-                        testID="add-product-threshold-input"
+                <TouchableOpacity
+                    style={styles.advancedToggle}
+                    onPress={() => setShowAdvanced(v => !v)}
+                    accessibilityRole="button"
+                    accessibilityState={{ expanded: showAdvanced }}
+                    testID="add-product-advanced-toggle"
+                >
+                    <Text style={styles.advancedToggleText}>
+                        {showAdvanced ? 'Hide advanced options' : 'Advanced options'}
+                    </Text>
+                    <Ionicons
+                        name={showAdvanced ? 'chevron-up' : 'chevron-down'}
+                        size={16}
+                        color={Colors.light.tint}
                     />
-                    <AppTextField
-                        label={`Initial Stock (${baseUnit})`}
-                        value={initialStock}
-                        onChangeText={setInitialStock}
-                        keyboardType="decimal-pad"
-                        placeholder="100"
-                        containerStyle={styles.halfCol}
-                        testID="add-product-initial-stock-input"
-                    />
-                </View>
+                </TouchableOpacity>
+
+                {showAdvanced && (
+                    <View testID="add-product-advanced-section">
+                        <AppTextField
+                            label="Hindi / Vernacular Alias (Comma-separated)"
+                            value={alias}
+                            onChangeText={setAlias}
+                            placeholder="कच्ची खांड, Desi Cheeni, Brown Sugar"
+                            testID="add-product-alias-input"
+                        />
+
+                        <Text style={styles.fieldLabel}>Category</Text>
+                        <View style={styles.chipRow}>
+                            {CREATABLE_CATEGORY_OPTIONS.map((cat) => {
+                                const active = cat.key === category;
+                                return (
+                                    <TouchableOpacity
+                                        key={cat.key}
+                                        style={[styles.chip, active && styles.chipActive]}
+                                        onPress={() => handleCategoryChange(cat.key)}
+                                        accessibilityRole="button"
+                                        accessibilityState={{ selected: active }}
+                                        testID={`category-chip-${cat.key}`}
+                                    >
+                                        <Text style={[styles.chipText, active && styles.chipTextActive]}>
+                                            {cat.label}
+                                        </Text>
+                                    </TouchableOpacity>
+                                );
+                            })}
+                        </View>
+
+                        <View style={styles.twoCol}>
+                            <AppTextField
+                                label={`Cost Price (₹ / ${baseUnit})`}
+                                value={costPrice}
+                                onChangeText={setCostPrice}
+                                keyboardType="decimal-pad"
+                                placeholder="42"
+                                containerStyle={styles.halfCol}
+                                testID="add-product-cost-price-input"
+                            />
+                            <AppTextField
+                                label={`Min Alert (${baseUnit})`}
+                                value={lowStockThreshold}
+                                onChangeText={setLowStockThreshold}
+                                keyboardType="numeric"
+                                placeholder="10"
+                                containerStyle={styles.halfCol}
+                                testID="add-product-threshold-input"
+                            />
+                        </View>
+
+                        <Text style={styles.sectionTitle}>Wholesale Packaging (Optional)</Text>
+                        <View style={styles.twoCol}>
+                            <AppTextField
+                                label="Secondary Unit"
+                                value={secondaryUnit}
+                                onChangeText={setSecondaryUnit}
+                                placeholder="e.g. bori, pipa, peti"
+                                autoCapitalize="none"
+                                containerStyle={styles.halfCol}
+                                testID="add-product-secondary-unit-input"
+                            />
+                            <AppTextField
+                                label={`Factor (1 unit = ? ${baseUnit})`}
+                                value={conversionFactor}
+                                onChangeText={setConversionFactor}
+                                keyboardType="decimal-pad"
+                                placeholder="50"
+                                containerStyle={styles.halfCol}
+                                testID="add-product-conversion-factor-input"
+                            />
+                        </View>
+                    </View>
+                )}
 
                 <AppButton
                     title={submitting ? 'Adding...' : 'Add to Catalog 🚀'}
@@ -374,5 +394,21 @@ const styles = StyleSheet.create({
     },
     submitBtn: {
         marginTop: Spacing.md,
+    },
+    advancedToggle: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingVertical: Spacing.sm,
+        marginTop: Spacing.sm,
+        marginBottom: Spacing.xs,
+        borderTopWidth: StyleSheet.hairlineWidth,
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderColor: Colors.light.border,
+    },
+    advancedToggleText: {
+        ...Typography.captionStrong,
+        color: Colors.light.tint,
+        fontSize: 13,
     },
 });

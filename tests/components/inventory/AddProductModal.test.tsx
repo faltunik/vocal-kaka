@@ -43,16 +43,19 @@ describe('AddProductModal', () => {
             />
         );
 
-        expect(getByText('Add Product / Commodity')).toBeTruthy();
+        expect(getByText('Add Product')).toBeTruthy();
         expect(getByTestId('add-product-name-input')).toBeTruthy();
+        expect(getByTestId('unit-chip-kg')).toBeTruthy();
+        expect(getByTestId('unit-chip-l')).toBeTruthy();
+        expect(getByTestId('unit-chip-pcs')).toBeTruthy();
+
+        // Extras live behind Advanced options.
+        fireEvent.press(getByTestId('add-product-advanced-toggle'));
         expect(getByTestId('add-product-alias-input')).toBeTruthy();
         expect(getByTestId('category-chip-STAPLES')).toBeTruthy();
         expect(getByTestId('category-chip-FMCG')).toBeTruthy();
         expect(getByTestId('category-chip-DAIRY_BAKERY')).toBeTruthy();
         expect(getByTestId('category-chip-SPICES')).toBeTruthy();
-        expect(getByTestId('unit-chip-kg')).toBeTruthy();
-        expect(getByTestId('unit-chip-l')).toBeTruthy();
-        expect(getByTestId('unit-chip-pcs')).toBeTruthy();
         expect(getByTestId('unit-chip-m')).toBeTruthy();
         expect(getByTestId('add-product-secondary-unit-input')).toBeTruthy();
         expect(getByTestId('add-product-conversion-factor-input')).toBeTruthy();
@@ -98,6 +101,9 @@ describe('AddProductModal', () => {
 
         // Fill in required name
         fireEvent.changeText(getByTestId('add-product-name-input'), 'Desi Khand');
+
+        // Extras (alias, category, packaging) live behind Advanced options
+        fireEvent.press(getByTestId('add-product-advanced-toggle'));
 
         // Fill in Hindi / Vernacular alias
         fireEvent.changeText(getByTestId('add-product-alias-input'), 'कच्ची खांड, Brown Sugar');
