@@ -24,7 +24,7 @@ staff mode, invite-code expiry, database hardening) is included in that baseline
 **What was built for this submission (26 October – 4 November 2026).**
 
 - **Meta became the reasoning layer of the voice loop.** Every transcript is parsed by
-  **Muse Spark 1.3** into structured ledger actions (JSON-schema constrained), with
+  **Muse Spark 1.1** into structured ledger actions (JSON-schema constrained), with
   **Llama 3.3 70B** (Meta open weights) as the first failover, then `gpt-oss-120b` as the
   reliability floor. Muse Spark runs through OpenRouter (upstream provider: *Meta*) or directly
   against `api.meta.ai` — one code path, one env var.
@@ -81,7 +81,7 @@ asked — a spoken answer. No forms. No barcode required. No English required.
 
 | Stage | Primary | Failover 1 | Failover 2 |
 |---|---|---|---|
-| **Intent parsing** | **Muse Spark 1.3** (`meta/muse-spark-1.3` via OpenRouter, upstream provider *Meta* — or `muse-spark-1.3` direct on `api.meta.ai`) | **Llama 3.3 70B** (`meta-llama/llama-3.3-70b-instruct`, Meta open weights) | `openai/gpt-oss-120b` (Groq) |
+| **Intent parsing** | **Muse Spark 1.1** (`meta/muse-spark-1.1` via OpenRouter, upstream provider *Meta* — or `muse-spark-1.1` direct on `api.meta.ai`) | **Llama 3.3 70B** (`meta-llama/llama-3.3-70b-instruct`, Meta open weights) | `openai/gpt-oss-120b` (Groq) |
 | **Speech → text** | **Muse Voice Transcribe** (`muse-voice-transcribe-1.0`, direct transport, RIFF/WAVE) | Whisper large-v3 (Groq) | Nemotron (OpenRouter) |
 
 Why this is not a wrapper:
@@ -200,7 +200,7 @@ Measured on this tree:
 | Unit normalization corpus | **20/20 (100%)** — bori, peti, paav, crate, dozen, cross-dimension guards |
 | Intent parsing, section S1 | **14/15 (93.3%)** — full 248-case run is TPM-limited; not claimed as corpus-wide |
 | ASR latency (7 samples) | p50 **314 ms**, p95 **473 ms** |
-| Parse latency (Muse Spark, low reasoning) | **~5.7–6.0 s** on a 2.9k-token system prompt |
+| Parse latency (Muse Spark 1.1, low reasoning) | **2.3 s** avg on the S1 eval, **2.9 s** in the live smoke test |
 | Duplicate ledger events on replay | **0** — 3 replays × 5 actions collapse to 5 unique content-hash ids |
 
 The benchmark methodology, runner spec and the idempotency proof are in `docs/BENCHMARKS.md`.

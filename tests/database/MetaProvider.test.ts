@@ -54,7 +54,7 @@ describe('meta provider', () => {
             expect(cfg?.transport).toBe('openrouter');
             expect(cfg?.model).toBe(META_INTENT_MODEL_OPENROUTER);
             expect(cfg?.asrUrl).toBeNull();
-            expect(cfg?.label).toBe('meta:openrouter:muse-spark-1.3');
+            expect(cfg?.label).toBe('meta:openrouter:muse-spark-1.1');
         });
 
         it('prefers direct when a Meta key exists', () => {
@@ -150,7 +150,7 @@ describe('meta provider', () => {
 
             const result = await parseWithMeta('ek kilo cheeni becha', ['Sugar'], cfg);
 
-            expect(result.provider).toBe('meta:openrouter:muse-spark-1.3');
+            expect(result.provider).toBe('meta:openrouter:muse-spark-1.1');
             expect(fetchSpy).toHaveBeenCalledTimes(1);
             fetchSpy.mockRestore();
         });

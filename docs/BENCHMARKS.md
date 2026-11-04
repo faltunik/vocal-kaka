@@ -49,12 +49,13 @@ Run: `npm run test:intent` (live provider calls; requires `OPENROUTER_API_KEY`).
 | Stage | p50 | p95 | n |
 |---|---|---|---|
 | ASR (Whisper large-v3) | **314 ms** | **473 ms** | 7 |
-| Intent (Muse Spark 1.3, `reasoning_effort: low`) | **5.7 s** | **6.0 s** | 2 |
+| Intent (Muse Spark 1.1, `reasoning_effort: low`) | **2.3 s** | **2.9 s** | 14 |
 | End-to-end voice command | **7.4 s** | **10.6 s** | 7 |
 
 Muse Spark spends most of its time on the ~2.9k-token system prompt and reasoning tokens.
-`prompt_cache_key` groups requests so the prefix can cache; the second measured call was
-6.0 s versus 5.7 s for the first, so caching did not dominate at this sample size.
+On the S1 eval both Spark models scored 12/12 intent and 12/12 item; 1.1 averaged **2.3 s**
+against **6.5 s** for 1.3, so 1.1 is the default (`META_MODEL` overrides it). `prompt_cache_key`
+groups requests so the prefix can cache.
 
 ## 5. Idempotency proof
 

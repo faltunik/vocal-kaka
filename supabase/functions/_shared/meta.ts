@@ -22,7 +22,7 @@ export interface MetaTransportConfig {
     asrModel: string | null;
     apiKey: string;
     extraHeaders: Record<string, string>;
-    /** Value stored in voice_command_logs.parse_provider, e.g. meta:openrouter:muse-spark-1.3 */
+    /** Value stored in voice_command_logs.parse_provider, e.g. meta:openrouter:muse-spark-1.1 */
     label: string;
     asrLabel: string | null;
 }
@@ -49,8 +49,10 @@ export interface MetaAsrResult {
 
 export const META_BASE_URL = 'https://api.meta.ai/v1';
 export const OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1';
-export const META_INTENT_MODEL = 'muse-spark-1.3';
-export const META_INTENT_MODEL_OPENROUTER = 'meta/muse-spark-1.3';
+// Spark 1.1 is the default because it matched 1.3 on the S1 eval (12/12 intent,
+// 12/12 item) at 2.3s vs 6.5s per command. Override with META_MODEL.
+export const META_INTENT_MODEL = 'muse-spark-1.1';
+export const META_INTENT_MODEL_OPENROUTER = 'meta/muse-spark-1.1';
 export const META_ASR_MODEL = 'muse-voice-transcribe-1.0';
 
 export const LLM_TIMEOUT_MS = 15_000;
