@@ -100,9 +100,10 @@ export async function transcribeAudio(
                 const form = new FormData();
                 form.append('file', audio, filename);
                 form.append('model', GROQ_WHISPER_MODEL);
-                // No forced language: Hinglish is code-switched, and forcing
-                // 'hi' made Whisper translate to English (dropping verbs).
-                // Auto-detect reports the real language in verbose_json.
+                // Short Hinglish clips get misdetected (auto once returned
+                // Gujarati for a Hindi utterance). Force Hindi so the script is
+                // consistent; verbose_json keeps the response diagnosable.
+                form.append('language', 'hi');
                 form.append('prompt', ASR_CONTEXT_PROMPT);
                 form.append('response_format', 'verbose_json');
                 const response = await fetch(GROQ_ASR_URL, {
