@@ -404,12 +404,7 @@ export default function HistoryScreen() {
                 ))}
             </View>
 
-            <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                style={styles.tabsScroll}
-                contentContainerStyle={styles.tabsContent}
-            >
+            <View style={styles.tabsWrap}>
                 {HISTORY_TABS.map(tab => {
                     const active = tab.value === activeTab;
                     return (
@@ -427,7 +422,7 @@ export default function HistoryScreen() {
                         </TouchableOpacity>
                     );
                 })}
-            </ScrollView>
+            </View>
 
             <FlatList
                 data={aggregatedData}
@@ -582,13 +577,12 @@ const styles = StyleSheet.create({
         color: Colors.light.onTint,
         fontWeight: '600',
     },
-    tabsScroll: {
-        flexGrow: 0,
-        marginBottom: Spacing.lg,
-    },
-    tabsContent: {
-        paddingHorizontal: Spacing.xl,
+    tabsWrap: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
         gap: Spacing.sm,
+        paddingHorizontal: Spacing.xl,
+        marginBottom: Spacing.lg,
     },
     tabPill: {
         paddingHorizontal: Spacing.lg,

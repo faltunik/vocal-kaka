@@ -373,6 +373,15 @@ export async function executeActions(
                         },
                     });
                 } else {
+                    // Snapshot the catalog selling price at sale time when the
+                    // speaker did not state one. Without it the feed shows a
+                    // timestamp instead of money, and profit drifts later when
+                    // the catalog price is edited.
+                    const catalogRecord = lookup ? await lookup(product) : null;
+                    const catalogPrice = Number(catalogRecord?.selling_price);
+                    const snapshotPrice = price != null
+                        ? price
+                        : (Number.isFinite(catalogPrice) && catalogPrice > 0 ? catalogPrice : null);
                     events.push({
                         type: 'SOLD',
                         payload: {
@@ -381,7 +390,9 @@ export async function executeActions(
                             ...unitFields,
                             ...auditFields,
                             ...(totalAmount != null ? { amount: totalAmount } : {}),
-                            ...(price != null ? { price } : {}),
+                            ...(snapshotPrice != null
+                                ? { price: snapshotPrice, unit_price_used: snapshotPrice }
+                                : {}),
                             ...(action.original_text ? { original_text: action.original_text } : {}),
                         },
                     });
@@ -494,6 +505,13 @@ export function executeActionsSync(
                         },
                     });
                 } else {
+                    // Same snapshot rule as executeActions, using the sync lookup.
+                    const syncRecord = lookup ? lookup(product) : null;
+                    const usable = syncRecord instanceof Promise ? null : syncRecord;
+                    const catalogPrice = Number(usable?.selling_price);
+                    const snapshotPrice = price != null
+                        ? price
+                        : (Number.isFinite(catalogPrice) && catalogPrice > 0 ? catalogPrice : null);
                     events.push({
                         type: 'SOLD',
                         payload: {
@@ -502,7 +520,9 @@ export function executeActionsSync(
                             ...unitFields,
                             ...auditFields,
                             ...(totalAmount != null ? { amount: totalAmount } : {}),
-                            ...(price != null ? { price } : {}),
+                            ...(snapshotPrice != null
+                                ? { price: snapshotPrice, unit_price_used: snapshotPrice }
+                                : {}),
                             ...(action.original_text ? { original_text: action.original_text } : {}),
                         },
                     });

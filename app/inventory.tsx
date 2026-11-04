@@ -158,11 +158,7 @@ export default function InventoryScreen() {
 
             {/* Category Filter Chips */}
             <View style={styles.categoryContainer}>
-                <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={styles.categoryScroll}
-                >
+                <View style={styles.categoryScroll}>
                     {CATEGORIES.map((cat) => {
                         const active = selectedCategory === cat;
                         return (
@@ -185,7 +181,7 @@ export default function InventoryScreen() {
                             </TouchableOpacity>
                         );
                     })}
-                </ScrollView>
+                </View>
             </View>
 
             {/* Product List */}
@@ -316,6 +312,8 @@ const styles = StyleSheet.create({
         marginBottom: Spacing.sm,
     },
     categoryScroll: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
         paddingHorizontal: Spacing.xl,
         gap: Spacing.xs,
     },

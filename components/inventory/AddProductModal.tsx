@@ -189,14 +189,26 @@ export function AddProductModal({ visible, onClose, onSuccess, userId }: AddProd
                     })}
                 </View>
 
-                <AppTextField
-                    label={`Selling Price (₹ / ${baseUnit})`}
-                    value={sellingPrice}
-                    onChangeText={setSellingPrice}
-                    keyboardType="decimal-pad"
-                    placeholder="48"
-                    testID="add-product-selling-price-input"
-                />
+                <View style={styles.twoCol}>
+                    <AppTextField
+                        label={`Selling Price (₹ / ${baseUnit})`}
+                        value={sellingPrice}
+                        onChangeText={setSellingPrice}
+                        keyboardType="decimal-pad"
+                        placeholder="48"
+                        containerStyle={styles.halfCol}
+                        testID="add-product-selling-price-input"
+                    />
+                    <AppTextField
+                        label={`Purchase Price (₹ / ${baseUnit})`}
+                        value={costPrice}
+                        onChangeText={setCostPrice}
+                        keyboardType="decimal-pad"
+                        placeholder="42"
+                        containerStyle={styles.halfCol}
+                        testID="add-product-cost-price-input"
+                    />
+                </View>
 
                 <AppTextField
                     label={`Initial Stock (${baseUnit})`}
@@ -255,26 +267,14 @@ export function AddProductModal({ visible, onClose, onSuccess, userId }: AddProd
                             })}
                         </View>
 
-                        <View style={styles.twoCol}>
-                            <AppTextField
-                                label={`Cost Price (₹ / ${baseUnit})`}
-                                value={costPrice}
-                                onChangeText={setCostPrice}
-                                keyboardType="decimal-pad"
-                                placeholder="42"
-                                containerStyle={styles.halfCol}
-                                testID="add-product-cost-price-input"
-                            />
-                            <AppTextField
-                                label={`Min Alert (${baseUnit})`}
-                                value={lowStockThreshold}
-                                onChangeText={setLowStockThreshold}
-                                keyboardType="numeric"
-                                placeholder="10"
-                                containerStyle={styles.halfCol}
-                                testID="add-product-threshold-input"
-                            />
-                        </View>
+                        <AppTextField
+                            label={`Min Alert (${baseUnit})`}
+                            value={lowStockThreshold}
+                            onChangeText={setLowStockThreshold}
+                            keyboardType="numeric"
+                            placeholder="10"
+                            testID="add-product-threshold-input"
+                        />
 
                         <Text style={styles.sectionTitle}>Wholesale Packaging (Optional)</Text>
                         <View style={styles.twoCol}>

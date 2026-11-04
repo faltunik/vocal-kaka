@@ -218,14 +218,36 @@ export function EditProductModal({ visible, item, onClose, onSuccess, userId }: 
                 <Text style={styles.sectionHeader}>Rate & Measurement</Text>
                 <Text style={styles.unitNote}>Base Measurement Unit: {baseUnit}</Text>
 
-                <AppTextField
-                    label={`Counter Selling Rate (₹ / ${baseUnit})`}
-                    value={sellingPrice}
-                    onChangeText={setSellingPrice}
-                    keyboardType="decimal-pad"
-                    placeholder="e.g. 48"
-                    testID="edit-product-selling-price-input"
-                />
+                <View style={styles.row}>
+                    <AppTextField
+                        label={`Selling Rate (₹ / ${baseUnit})`}
+                        value={sellingPrice}
+                        onChangeText={setSellingPrice}
+                        keyboardType="decimal-pad"
+                        placeholder="e.g. 48"
+                        containerStyle={styles.halfInput}
+                        testID="edit-product-selling-price-input"
+                    />
+                    <AppTextField
+                        label={`Purchase Price (₹ / ${baseUnit})`}
+                        value={costPrice}
+                        onChangeText={setCostPrice}
+                        keyboardType="decimal-pad"
+                        placeholder="e.g. 42"
+                        containerStyle={styles.halfInput}
+                        testID="edit-product-cost-price-input"
+                    />
+                </View>
+
+                {validMargin && (
+                    <View style={[styles.marginPreview, isNegativeMargin && styles.marginWarning]}>
+                        <Text style={[styles.marginText, isNegativeMargin && styles.marginWarningText]}>
+                            {isNegativeMargin
+                                ? `Warning: Negative Margin ₹${marginDelta.toFixed(2)} (${marginPercent}%)`
+                                : `Gross Margin: ₹${marginDelta.toFixed(2)} / ${baseUnit} (+${marginPercent}%)`}
+                        </Text>
+                    </View>
+                )}
 
                 <TouchableOpacity
                     style={styles.advancedToggle}
@@ -274,25 +296,6 @@ export function EditProductModal({ visible, item, onClose, onSuccess, userId }: 
                                 );
                             })}
                         </View>
-
-                        <AppTextField
-                            label={`Wholesale Cost (₹ / ${baseUnit})`}
-                            value={costPrice}
-                            onChangeText={setCostPrice}
-                            keyboardType="decimal-pad"
-                            placeholder="e.g. 42"
-                            testID="edit-product-cost-price-input"
-                        />
-
-                        {validMargin && (
-                            <View style={[styles.marginPreview, isNegativeMargin && styles.marginWarning]}>
-                                <Text style={[styles.marginText, isNegativeMargin && styles.marginWarningText]}>
-                                    {isNegativeMargin
-                                        ? `Warning: Negative Margin ₹${marginDelta.toFixed(2)} (${marginPercent}%)`
-                                        : `Gross Margin: ₹${marginDelta.toFixed(2)} / ${baseUnit} (+${marginPercent}%)`}
-                                </Text>
-                            </View>
-                        )}
 
                         <AppTextField
                             label={`Low-Stock Alert Threshold (${baseUnit})`}
